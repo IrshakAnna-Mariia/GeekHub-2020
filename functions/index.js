@@ -7,6 +7,7 @@ document.querySelectorAll('input[name], #formula, #condition').forEach(function 
         var formula = document.querySelector('#formula');
         var condition = document.querySelector('#condition');
         var result = document.querySelector('#result');
+        var resultOfCondition = document.querySelector('#change');
 
         try {
             var calculator = new Function('a1, b1, a2, b2', 'return ' + formula.value + ';');
@@ -17,11 +18,15 @@ document.querySelectorAll('input[name], #formula, #condition').forEach(function 
             console.error(error.message);
         }
 
-        var compare = new Function('a1, b1, a2, b2', 'return'+ condition.value + ';');
-        if (compare(Number(a1.value), Number(b1.value), Number(a2.value), Number(b2.value))) {
-            result.style.background = "#b6d7a8";
-        } else {result.style.background = "#FFFFFF";}
-
+        var Compare = new Function('a1, b1, a2, b2', 'return ' + condition.value + ';');
+            var changeColor = function() {
+            resultOfCondition.value = Compare(Number(a1.value), Number(b1.value), Number(a2.value), Number(b2.value));
+            if(Compare(Number(a1.value), Number(b1.value), Number(a2.value), Number(b2.value))){
+                result.style.background = "#b6d7a8";
+            } else {result.style.background = "#ffffff"}
+            return 0;
+            }
+            changeColor(Number(a1.value), Number(b1.value), Number(a2.value), Number(b2.value));
 
     });
 });
