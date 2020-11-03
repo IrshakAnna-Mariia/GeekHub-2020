@@ -4,7 +4,7 @@ document.querySelector('#user-form').addEventListener('submit', function (e) {
     var email = document.querySelector('[name="email"]');
     var password = document.querySelector('[name="password"]');
 
-    var regexpOfFullName = /^[а-яА-ЯїЇіІєЄ]+\s[а-яА-ЯїЇіІєЄ]+\s[а-яА-ЯїЇіІєЄ]+$/;
+    var regexpOfFullName = /^[а-яА-ЯїЇіІєЄ]+\s+[а-яА-ЯїЇіІєЄ]+\s+[а-яА-ЯїЇіІєЄ]+$/;
     var regexpOfEmail = /^[a-zA-Z0-9-][a-zA-Z.0-9-]+[a-zA-Z0-9-]@[a-zA-Z0-9-][a-zA-Z.0-9-]+[.][a-zA-Z.0-9-]+[a-zA-Z0-9-]$/;
     var regexpOfPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9]{8,}$/;
 
