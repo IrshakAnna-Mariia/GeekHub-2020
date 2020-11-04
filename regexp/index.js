@@ -5,7 +5,7 @@ document.querySelector('#user-form').addEventListener('submit', function (e) {
     var password = document.querySelector('[name="password"]');
 
     var regexpOfFullName = /^[а-щА-ЩЬьЮюЯяЇїІіЄєҐґ]+\s+[а-щА-ЩЬьЮюЯяЇїІіЄєҐґ]+\s+[а-щА-ЩЬьЮюЯяЇїІіЄєҐґ]+$/;
-    var regexpOfEmail = /^[a-zA-Z0-9-]{1}[a-zA-Z.0-9-]+[a-zA-Z0-9-]{1}@[a-zA-Z0-9-]{1}[a-zA-Z.0-9-]+\.[a-zA-Z0-9-]+$/;
+    var regexpOfEmail = /^[a-zA-Z0-9-][a-zA-Z.0-9-]*[a-zA-Z0-9-]@[a-zA-Z0-9-][a-zA-Z.0-9-]*\.[a-zA-Z0-9-]+$/;
     var regexpOfPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9]{8,}$/;
 
     fullName.style.backgroundColor = regexpOfFullName.test(fullName.value)?'#c2e0c6':'#f9d0c4';
