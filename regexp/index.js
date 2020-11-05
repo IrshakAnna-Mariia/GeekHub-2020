@@ -14,6 +14,25 @@ document.querySelector('#user-form').addEventListener('submit', function (e) {
 
 });
 
+document.querySelector('[data-show="preview"]').addEventListener('click', function () {
+    document.querySelector('#preview').innerHTML = "";
+    const strongWords = /\+\+(.*?)\+\+/g;
+    const iWords = /--(.*?)--/g;
+    const imgSrc = /\(https:\/\/(.*?)\.jpg\)/g;
+    const aHref = /https:\/\/(.*?)\s/g;
+    let description = document.querySelector('#description').value;
+
+    description = description.replaceAll(strongWords, "<strong>$&</strong>");
+    description = description.replaceAll(/\+\+/g,"");
+    description = description.replaceAll(iWords, "<i>$&</i>");
+    description = description.replaceAll(/--/g,"");
+    description = description.replaceAll(imgSrc,"<img src = " + "\"" +"$&"+"\"" + "/>");
+    description = description.replaceAll(/[()]/g, "");
+    description = description.replaceAll(aHref, "<a href ="+ "\""+ "$&" +"\"" + ">"+"$&"+"</a>");
+    document.querySelector('#preview').innerHTML = description;
+
+});
+
 document.querySelectorAll('[data-show="description"], [data-show="preview"]').forEach(function (event) {
     event.addEventListener('click',function () {
         var active = document.getElementsByClassName("active");
