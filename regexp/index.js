@@ -14,10 +14,12 @@ document.querySelector('#user-form').addEventListener('submit', function (e) {
 
 });
 
-document.querySelector('[class="btn-group"]').addEventListener('click', function () {
-    var active = document.getElementsByClassName("active");
-    active[0].className = active[0].className.replace(" active", "");
-    this.className+=" active";
+document.querySelectorAll('[data-show="description"], [data-show="preview"]').forEach(function (event) {
+    event.addEventListener('click',function () {
+        var active = document.getElementsByClassName("active");
+        active[0].className = active[0].className.replace(" active", "");
+        this.className+=" active";
+    })
 });
 
 document.querySelectorAll('[data-show]').forEach(function (button) {
