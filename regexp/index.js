@@ -19,7 +19,7 @@ document.querySelector('[data-show="preview"]').addEventListener('click', functi
     const strongWords = /\+\+(.*?)\+\+/g;
     const iWords = /--(.*?)--/g;
     const imgSrc = /\(https:\/\/(.*?)\.jpg\)/g;
-    const aHref = /[^"]https:\/\/(.*?)\s/g;
+    const aHref = /[^"]https:\/\/(.*?)[\s,]/g;
     let description = document.querySelector('#description').value;
 
     description = description.replaceAll(strongWords, "<strong>$&</strong>");
