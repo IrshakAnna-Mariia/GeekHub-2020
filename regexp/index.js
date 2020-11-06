@@ -22,6 +22,7 @@ document.querySelector('[data-show="preview"]').addEventListener('click', functi
     const aHref = /https:\/\/(.*?)\.(.*?)[^a-zA-Z0-9_./$%&#!@*-]/g;
     let description = document.querySelector('#description').value;
 
+    description = description + " ";
     description = description.replaceAll(strongWords, "<strong>$&</strong>");
     description = description.replaceAll(/\+\+/g,"");
     description = description.replaceAll(iWords, "<i>$&</i>");
@@ -38,12 +39,16 @@ document.querySelector('[data-show="preview"]').addEventListener('click', functi
             dummyVariableNew[i] = dummyVariable[i].substring(0, dummyVariable[i].length - 1);
             splitVariable = dummyVariable[i].split('');
             if (/\.jpg/.test(dummyVariableNew[i]) === false) {
+                if (splitVariable[splitVariable.length-2]==='.'){
+                    dummyVariableNew[i] = dummyVariableNew[i].substring(0,dummyVariableNew[i].length-1);
+                    description = description.replace(dummyVariable[i], "<a href =" + "\"" + dummyVariableNew[i] + "\"" + ">" + dummyVariableNew[i] + "</a>" + splitVariable[splitVariable.length - 2] +splitVariable[splitVariable.length - 1]);
+                }
                 description = description.replace(dummyVariable[i], "<a href =" + "\"" + dummyVariableNew[i] + "\"" + ">" + dummyVariableNew[i] + "</a>" + splitVariable[splitVariable.length - 1]);
             }
             splitVariable = [];
         }
     }
-    document.querySelector('#preview').innerHTML = description;
+    document.querySelector('#preview').innerHTML = description.substring(0,description.length-1);
 
 });
 
