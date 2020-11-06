@@ -19,16 +19,26 @@ document.querySelector('[data-show="preview"]').addEventListener('click', functi
     const strongWords = /\+\+(.*?)\+\+/g;
     const iWords = /--(.*?)--/g;
     const imgSrc = /\(https:\/\/(.*?)\.jpg\)/g;
-    const aHref = /[^"]https:\/\/(.*?)[\s,]/g;
+    const aHref = /https:\/\/(.*?)\.(.*?)[^a-zA-Z0-9_./$%&#!@*-]/g;
     let description = document.querySelector('#description').value;
 
     description = description.replaceAll(strongWords, "<strong>$&</strong>");
     description = description.replaceAll(/\+\+/g,"");
     description = description.replaceAll(iWords, "<i>$&</i>");
     description = description.replaceAll(/--/g,"");
-    description = description.replaceAll(imgSrc,"<img src = " + "\"" +"$&"+"\"" + "/>");
-    description = description.replaceAll(/[()]/g, "");
-    description = description.replaceAll(aHref, "<a href ="+ "\""+ "$&" +"\"" + ">"+"$&"+"</a>");
+    description = description.replaceAll(imgSrc,"<img src=" + "\"" +"$&"+"\"" + "/>");
+    description = description.replaceAll(/\(https:/g, "https:");
+    description = description.replaceAll(/\.jpg\)/g, ".jpg");
+    //description = description.replaceAll(aHref, "<a href ="+ "\""+ "$&" +"\"" + ">"+"$&"+"</a>");dummyVariable.length
+
+    var dummyVariable = description.match(aHref);
+    for (var i = 0; i<dummyVariable.length; i++) {
+        var dummyVariableNew = [];
+        dummyVariableNew[i] = dummyVariable[i].substring(0,dummyVariable[i].length-1);
+        if (/\.jpg/.test(dummyVariableNew[i])===false) {
+            description = description.replace(dummyVariable[i], "<a href ="+ "\""+ dummyVariableNew +"\"" + ">"+dummyVariableNew+"</a>")
+        }
+    }
     document.querySelector('#preview').innerHTML = description;
 
 });
