@@ -29,15 +29,17 @@ document.querySelector('[data-show="preview"]').addEventListener('click', functi
     description = description.replaceAll(imgSrc,"<img src=" + "\"" +"$&"+"\"" + "/>");
     description = description.replaceAll(/\(https:/g, "https:");
     description = description.replaceAll(/\.jpg\)/g, ".jpg");
-    //description = description.replaceAll(aHref, "<a href ="+ "\""+ "$&" +"\"" + ">"+"$&"+"</a>");dummyVariable.length
 
     var dummyVariable = description.match(aHref);
     for (var i = 0; i<dummyVariable.length; i++) {
         var dummyVariableNew = [];
+        var splitVariable = [];
         dummyVariableNew[i] = dummyVariable[i].substring(0,dummyVariable[i].length-1);
+        splitVariable = dummyVariable[i].split('');
         if (/\.jpg/.test(dummyVariableNew[i])===false) {
-            description = description.replace(dummyVariable[i], "<a href ="+ "\""+ dummyVariableNew +"\"" + ">"+dummyVariableNew+"</a>")
+            description = description.replace(dummyVariable[i], "<a href ="+ "\""+ dummyVariableNew[i] +"\"" + ">"+dummyVariableNew[i]+"</a>"+splitVariable[splitVariable.length-1]);
         }
+        splitVariable = [];
     }
     document.querySelector('#preview').innerHTML = description;
 
