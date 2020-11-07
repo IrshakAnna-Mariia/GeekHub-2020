@@ -18,7 +18,7 @@ document.querySelector('[data-show="preview"]').addEventListener('click', functi
     document.querySelector('#preview').innerHTML = "";
     const strongWords = /\+\+(.*?)\+\+/g;
     const iWords = /--(.*?)--/g;
-    const imgSrc = /\(https:\/\/(.*?)\.jpg\)/g;
+    const imgSrc = /\(https:\/\/(.*?)((\.jpg\))|(\.png\)))/g;
     const aHref = /https:\/\/(.*?)\.(.*?)[^a-zA-Z0-9_./$%&#!@*-]/g;
     let description = document.querySelector('#description').value;
 
@@ -28,8 +28,10 @@ document.querySelector('[data-show="preview"]').addEventListener('click', functi
     description = description.replaceAll(iWords, "<i>$&</i>");
     description = description.replaceAll(/--/g,"");
     description = description.replaceAll(imgSrc,"<img src=" + "\"" +"$&"+"\"" + "/>");
+    //description = description.replaceAll(imgScr2,"<img src=" + "\"" +"$&"+"\"" + "/>");
     description = description.replaceAll(/\(https:/g, "https:");
     description = description.replaceAll(/\.jpg\)/g, ".jpg");
+    description = description.replaceAll(/\.png\)/g, ".png")
 
     if(aHref.test(description)) {
         var dummyVariable = description.match(aHref);
@@ -38,12 +40,12 @@ document.querySelector('[data-show="preview"]').addEventListener('click', functi
             var splitVariable = [];
             dummyVariableNew[i] = dummyVariable[i].substring(0, dummyVariable[i].length - 1);
             splitVariable = dummyVariable[i].split('');
-            if (/\.jpg/.test(dummyVariableNew[i]) === false) {
-                if (splitVariable[splitVariable.length-2]==='.'){
-                    dummyVariableNew[i] = dummyVariableNew[i].substring(0,dummyVariableNew[i].length-1);
-                    description = description.replace(dummyVariable[i], "<a href =" + "\"" + dummyVariableNew[i] + "\"" + ">" + dummyVariableNew[i] + "</a>" + splitVariable[splitVariable.length - 2] +splitVariable[splitVariable.length - 1]);
-                }
-                description = description.replace(dummyVariable[i], "<a href =" + "\"" + dummyVariableNew[i] + "\"" + ">" + dummyVariableNew[i] + "</a>" + splitVariable[splitVariable.length - 1]);
+                if (/(\.jpg)|(\.png)/.test(dummyVariableNew[i]) === false) {
+                    if (splitVariable[splitVariable.length - 2] === '.') {
+                        dummyVariableNew[i] = dummyVariableNew[i].substring(0, dummyVariableNew[i].length - 1);
+                        description = description.replace(dummyVariable[i], "<a href =" + "\"" + dummyVariableNew[i] + "\"" + ">" + dummyVariableNew[i] + "</a>" + splitVariable[splitVariable.length - 2] + splitVariable[splitVariable.length - 1]);
+                    }
+                    description = description.replace(dummyVariable[i], "<a href =" + "\"" + dummyVariableNew[i] + "\"" + ">" + dummyVariableNew[i] + "</a>" + splitVariable[splitVariable.length - 1]);
             }
             splitVariable = [];
         }
