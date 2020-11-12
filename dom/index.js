@@ -61,6 +61,10 @@ jQuery('thead th').on('contextmenu', function (e) {
     e.preventDefault();
 
     currentColumn = e.currentTarget;
+    const dontShow = document.body.children[0].children[0].children[0].children[0];
+    if(currentColumn===dontShow){
+        return;
+    }
 
     var menu = jQuery('#column-menu');
 
