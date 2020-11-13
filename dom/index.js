@@ -96,8 +96,8 @@ jQuery('#column-menu [data-action]').on('click', function (e) {
         }
     }
 
-    function renameCell( left1_right2) {
-        for(let counter = indexOfCurrentColumn+left1_right2; counter<document.body.children[0].children[0].children[0].children.length; counter++) {
+    function renameCell( left0_right2) {
+        for(let counter = indexOfCurrentColumn+left0_right2; counter<document.body.children[0].children[0].children[0].children.length; counter++) {
             if(document.body.children[0].children[0].children[0].children[counter].childNodes[0].nodeValue===alphabet_A[columnName_A+k+1]){
                 k++;
                 document.body.children[0].children[0].children[0].children[counter].childNodes[0].nodeValue=alphabet_A[columnName_A+k+1];
@@ -136,8 +136,15 @@ jQuery('#column-menu [data-action]').on('click', function (e) {
             break;
 
         case 'remove':
-
-
+            currentColumn.remove();
+            for(let counterRow=0; counterRow < document.body.children[0].children[1].children.length; counterRow++){
+                document.body.children[0].children[1].children[counterRow].children[indexOfCurrentColumn].remove();
+            }
+            for(let counter = indexOfCurrentColumn; counter<document.body.children[0].children[0].children[0].children.length; counter++) {
+                document.body.children[0].children[0].children[0].children[counter].childNodes[0].nodeValue=alphabet_A[columnName_A+k];
+                k++;
+            }
+            renameRow();
             break;
     }
 
