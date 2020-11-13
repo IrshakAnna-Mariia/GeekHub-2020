@@ -82,122 +82,50 @@ jQuery('#column-menu [data-action]').on('click', function (e) {
 
     var action = e.currentTarget.getAttribute('data-action');
 
+    const alphabet_a = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
     const alphabet_A = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-    let letter;
+    const numeral = ['1', '2', '3','4', '5', '6', '7', '8', '9', '10', '11','12', '13', '14', '15', '16','17','18', '19', '20', '21', '22', '23', '24', '25', '26'];
+    let columnName_A;
 
     switch (action) {
         case 'add-left':
-            currentColumn.insertAdjacentHTML("beforebegin", "<th>&nbsp;</th>");
-            for (let counter = 0; counter<alphabet_A.length; counter++){
-                if (currentColumn.childNodes[0].nodeValue===alphabet_A[counter]){
-                    letter = counter;
-                    break;
+            let k=0;
+            for (let counter = 0; counter< alphabet_A.length; counter++){
+                if(currentColumn.childNodes[0].nodeValue ===alphabet_A[counter]) {
+                    columnName_A = counter;
                 }
             }
-            for (let counter = 0; counter<document.body.children[0].children[1].children.length; counter++){
-                document.body.children[0].children[1].children[counter].children[letter].insertAdjacentHTML("beforebegin", "<input type=\"text\" name=\"newInput\" value=\"\"/>")
+            currentColumn.insertAdjacentHTML("beforebegin", "<th>" + currentColumn.childNodes[0].nodeValue + "</th>");
+            for(let counter = 0; counter<document.body.children[0].children[0].children[0].children.length; counter++) {
+                if(document.body.children[0].children[0].children[0].children[counter].childNodes[0].nodeValue===alphabet_A[columnName_A+k+1]){
+                    k++;
+                    document.body.children[0].children[0].children[0].children[counter].childNodes[0].nodeValue=alphabet_A[columnName_A+k+1];
+                }
+            }
+            currentColumn.childNodes[0].nodeValue = alphabet_A[columnName_A+1];
+
+            let indexOfCurrentColumn = currentColumn.cellIndex;
+            for(let counter=0; counter<document.body.children[0].children[1].children.length; counter++){
+                document.body.children[0].children[1].children[counter].children[indexOfCurrentColumn-1].insertAdjacentHTML("beforebegin", "<td><input type=\"text\" name=\"" + alphabet_a[indexOfCurrentColumn-2] + numeral[counter] + "\" value=\"\"/></td>");
             }
 
+            for (let counterCell = indexOfCurrentColumn; counterCell<document.body.children[0].children[1].children[0].children.length; counterCell++){
+                for (let counterRow = 0; counterRow<document.body.children[0].children[1].children.length; counterRow++){
+                    document.body.children[0].children[1].children[counterRow].children[counterCell].children[0].name = alphabet_a[counterCell-1] + numeral[counterRow];
+                }
+            }
             break;
 
         case 'add-right':
-            currentColumn.insertAdjacentHTML("afterend", "<th>&nbsp;</th>");
-            for (let counter = 0; counter<alphabet_A.length; counter++){
-                if (currentColumn.childNodes[0].nodeValue===alphabet_A[counter]){
-                    letter = counter;
-                    break;
-                }
-            }
-            for (let counter = 0; counter<document.body.children[0].children[1].children.length; counter++){
-                document.body.children[0].children[1].children[counter].children[letter].insertAdjacentHTML("afterend", "<input type=\"text\" name=\"newInput1\" value=\"\"/>")
-            }
+
 
             break;
 
         case 'remove':
-            for (let counter = 0; counter<alphabet_A.length; counter++){
-                if (currentColumn.childNodes[0].nodeValue===alphabet_A[counter]){
-                    letter = counter;
-                    break;
-                }
-            }
-            currentColumn.remove();
-            for (let counter = 0; counter<document.body.children[0].children[1].children.length; counter++){
-                document.body.children[0].children[1].children[counter].children[letter].remove();
-            }
+
 
             break;
     }
 
     jQuery('#column-menu').removeClass('d-block');
 });
-
-jQuery('tbody th').on('contextmenu', function (e) {
-    e.preventDefault();
-
-    currentColumn = e.currentTarget;
-
-    var menu = jQuery('#row-menu');
-
-    menu.addClass('d-block');
-
-    menu.css({
-        left: e.clientX,
-        top: e.clientY
-    });
-});
-
-jQuery('#row-menu [data-action]').on('click', function (e) {
-    e.preventDefault();
-
-    var action = e.currentTarget.getAttribute('data-action');
-    const numeral = ['1', '2', '3','4', '5', '6', '7', '8', '9', '10', '11','12', '13', '14', '15', '16','17','18', '19', '20', '21', '22', '23', '24', '25', '26'];
-
-    switch (action) {
-        case 'add-above':
-            let letter1;
-            for (let counter = 0; counter<numeral.length; counter++){
-                if (currentColumn.childNodes[0].nodeValue===numeral[counter]){
-                    letter1 = counter;
-                    break;
-                }
-            }
-            let lengthOfRow = document.body.children[0].children[1].children[0].children.length-1
-            document.body.children[0].children[1].children[letter1].insertAdjacentHTML("beforebegin", "<th>smth</th>")
-            for (let counter = 0; counter < lengthOfRow; counter++){
-                let newElementRow = document.body.children[0].children[1].children[letter1].appendChild(document.createElement('td'));
-                newElementRow.innerHTML = "<input type=\"text\" name=\"newInputRow\" value=\"\"/>";
-            }
-            break;
-
-        case 'add-under':
-            let letter2;
-            for (let counter = 0; counter<numeral.length; counter++){
-                if (currentColumn.childNodes[0].nodeValue===numeral[counter]){
-                    letter2 = counter;
-                    break;
-                }
-            }
-            let lengthOfRow1 = document.body.children[0].children[1].children[0].children.length-1
-            document.body.children[0].children[1].children[letter2].insertAdjacentHTML("afterend", "<th>smth</th>")
-            for (let counter = 0; counter < lengthOfRow1; counter++){
-                let newElementRow = document.body.children[0].children[1].children[letter2+1].appendChild(document.createElement('td'));
-                newElementRow.innerHTML = "<input type=\"text\" name=\"newInputRow\" value=\"\"/>";
-            }
-            break;
-
-        case 'remove':
-            let letter3;
-            for (let counter = 0; counter<numeral.length; counter++){
-                if (currentColumn.childNodes[0].nodeValue===numeral[counter]){
-                    letter3 = counter;
-                    break;
-                }
-            }
-            document.body.children[0].children[1].children[letter3].remove();
-            break;
-    }
-
-    jQuery('#row-menu').removeClass('d-block');
-});
-
