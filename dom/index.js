@@ -86,39 +86,53 @@ jQuery('#column-menu [data-action]').on('click', function (e) {
     const alphabet_A = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
     const numeral = ['1', '2', '3','4', '5', '6', '7', '8', '9', '10', '11','12', '13', '14', '15', '16','17','18', '19', '20', '21', '22', '23', '24', '25', '26'];
     let columnName_A;
+    let k=0;
+
+    let indexOfCurrentColumn = currentColumn.cellIndex;
+
+    for (let counter = 0; counter< alphabet_A.length; counter++){
+        if(currentColumn.childNodes[0].nodeValue ===alphabet_A[counter]) {
+            columnName_A = counter;
+        }
+    }
+
+    function renameCell( left1_right2) {
+        for(let counter = indexOfCurrentColumn+left1_right2; counter<document.body.children[0].children[0].children[0].children.length; counter++) {
+            if(document.body.children[0].children[0].children[0].children[counter].childNodes[0].nodeValue===alphabet_A[columnName_A+k+1]){
+                k++;
+                document.body.children[0].children[0].children[0].children[counter].childNodes[0].nodeValue=alphabet_A[columnName_A+k+1];
+            }
+        }
+    }
+
+    function renameRow() {
+        for (let counterCell = indexOfCurrentColumn; counterCell<document.body.children[0].children[1].children[0].children.length; counterCell++){
+            for (let counterRow = 0; counterRow<document.body.children[0].children[1].children.length; counterRow++){
+                document.body.children[0].children[1].children[counterRow].children[counterCell].children[0].name = alphabet_a[counterCell-1] + numeral[counterRow];
+            }
+        }
+    }
 
     switch (action) {
         case 'add-left':
-            let k=0;
-            for (let counter = 0; counter< alphabet_A.length; counter++){
-                if(currentColumn.childNodes[0].nodeValue ===alphabet_A[counter]) {
-                    columnName_A = counter;
-                }
-            }
             currentColumn.insertAdjacentHTML("beforebegin", "<th>" + currentColumn.childNodes[0].nodeValue + "</th>");
-            for(let counter = 0; counter<document.body.children[0].children[0].children[0].children.length; counter++) {
-                if(document.body.children[0].children[0].children[0].children[counter].childNodes[0].nodeValue===alphabet_A[columnName_A+k+1]){
-                    k++;
-                    document.body.children[0].children[0].children[0].children[counter].childNodes[0].nodeValue=alphabet_A[columnName_A+k+1];
-                }
-            }
+            renameCell(0);
             currentColumn.childNodes[0].nodeValue = alphabet_A[columnName_A+1];
 
-            let indexOfCurrentColumn = currentColumn.cellIndex;
             for(let counter=0; counter<document.body.children[0].children[1].children.length; counter++){
-                document.body.children[0].children[1].children[counter].children[indexOfCurrentColumn-1].insertAdjacentHTML("beforebegin", "<td><input type=\"text\" name=\"" + alphabet_a[indexOfCurrentColumn-2] + numeral[counter] + "\" value=\"\"/></td>");
+                document.body.children[0].children[1].children[counter].children[indexOfCurrentColumn].insertAdjacentHTML("beforebegin", "<td><input type=\"text\" name=\"" + alphabet_a[indexOfCurrentColumn-2] + numeral[counter] + "\" value=\"\"/></td>");
             }
 
-            for (let counterCell = indexOfCurrentColumn; counterCell<document.body.children[0].children[1].children[0].children.length; counterCell++){
-                for (let counterRow = 0; counterRow<document.body.children[0].children[1].children.length; counterRow++){
-                    document.body.children[0].children[1].children[counterRow].children[counterCell].children[0].name = alphabet_a[counterCell-1] + numeral[counterRow];
-                }
-            }
+            renameRow();
             break;
 
         case 'add-right':
-
-
+            currentColumn.insertAdjacentHTML("afterend", "<th>" + alphabet_A[columnName_A+1] + "</th>");
+            renameCell(2);
+            for(let counter=0; counter<document.body.children[0].children[1].children.length; counter++){
+                document.body.children[0].children[1].children[counter].children[indexOfCurrentColumn].insertAdjacentHTML("afterend", "<td><input type=\"text\" name=\"" + alphabet_a[indexOfCurrentColumn] + numeral[counter] + "\" value=\"\"/></td>");
+            }
+            renameRow();
             break;
 
         case 'remove':
