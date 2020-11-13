@@ -105,7 +105,7 @@ jQuery('#column-menu [data-action]').on('click', function (e) {
         }
     }
 
-    function renameRow() {
+    function renameInput() {
         for (let counterCell = indexOfCurrentColumn; counterCell<document.body.children[0].children[1].children[0].children.length; counterCell++){
             for (let counterRow = 0; counterRow<document.body.children[0].children[1].children.length; counterRow++){
                 document.body.children[0].children[1].children[counterRow].children[counterCell].children[0].name = alphabet_a[counterCell-1] + numeral[counterRow];
@@ -123,7 +123,7 @@ jQuery('#column-menu [data-action]').on('click', function (e) {
                 document.body.children[0].children[1].children[counter].children[indexOfCurrentColumn].insertAdjacentHTML("beforebegin", "<td><input type=\"text\" name=\"" + alphabet_a[indexOfCurrentColumn-2] + numeral[counter] + "\" value=\"\"/></td>");
             }
 
-            renameRow();
+            renameInput();
             break;
 
         case 'add-right':
@@ -132,7 +132,7 @@ jQuery('#column-menu [data-action]').on('click', function (e) {
             for(let counter=0; counter<document.body.children[0].children[1].children.length; counter++){
                 document.body.children[0].children[1].children[counter].children[indexOfCurrentColumn].insertAdjacentHTML("afterend", "<td><input type=\"text\" name=\"" + alphabet_a[indexOfCurrentColumn] + numeral[counter] + "\" value=\"\"/></td>");
             }
-            renameRow();
+            renameInput();
             break;
 
         case 'remove':
@@ -144,9 +144,79 @@ jQuery('#column-menu [data-action]').on('click', function (e) {
                 document.body.children[0].children[0].children[0].children[counter].childNodes[0].nodeValue=alphabet_A[columnName_A+k];
                 k++;
             }
-            renameRow();
+            renameInput();
             break;
     }
 
     jQuery('#column-menu').removeClass('d-block');
+});
+
+let currentRow;
+jQuery('tbody th').on('contextmenu', function (e) {
+    e.preventDefault();
+
+    currentRow = e.currentTarget;
+
+    var menu = jQuery('#row-menu');
+
+    menu.addClass('d-block');
+
+    menu.css({
+        left: e.clientX,
+        top: e.clientY
+    });
+});
+
+jQuery('#row-menu [data-action]').on('click', function (e) {
+    e.preventDefault();
+    let indexOfCurrentRow;
+
+
+    var action = e.currentTarget.getAttribute('data-action');
+    const alphabet_a = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+    const numeral = ['1', '2', '3','4', '5', '6', '7', '8', '9', '10', '11','12', '13', '14', '15', '16','17','18', '19', '20', '21', '22', '23', '24', '25', '26'];
+    let lengthOfRow = document.body.children[0].children[1].children[0].children.length;
+
+    function currentRowIndex() {
+        for(let counter = 0; counter<document.body.children[0].children[1].children.length; counter++){
+            if (currentRow===document.body.children[0].children[1].children[counter].children[0]){
+                indexOfCurrentRow = counter;
+            }
+        }
+    }
+    function renameRow() {
+        for(let counter = 0; counter < document.body.children[0].children[1].children.length; counter++){
+            document.body.children[0].children[1].children[counter].children[0].childNodes[0].nodeValue = numeral[counter];
+        }
+    }
+    function addCell(row) {
+        for (let counter = 0; counter<lengthOfRow-1; counter++){
+            document.body.children[0].children[1].children[indexOfCurrentRow+row].children[counter].insertAdjacentHTML("afterend", "<td><input type=\"text\" name=\"\" value=\"\"/></td>")
+        }
+    }
+    function renameInput() {
+        for (let counterCell = 1; counterCell<document.body.children[0].children[1].children[0].children.length; counterCell++){
+            for (let counterRow = indexOfCurrentRow; counterRow<document.body.children[0].children[1].children.length; counterRow++){
+                document.body.children[0].children[1].children[counterRow].children[counterCell].children[0].name = alphabet_a[counterCell-1] + numeral[counterRow];
+            }
+        }
+    }
+
+    switch (action) {
+        case 'add-above':
+            currentRowIndex();
+            document.body.children[0].children[1].children[indexOfCurrentRow].insertAdjacentHTML("beforebegin", "<tr><th>"+numeral[indexOfCurrentRow]+"</th></th></tr>");
+            renameRow();
+            addCell(0);
+            renameInput();
+            break;
+
+        case 'add-under':
+            break;
+
+        case 'remove':
+            break;
+    }
+
+    jQuery('#row-menu').removeClass('d-block');
 });
