@@ -212,6 +212,11 @@ jQuery('#row-menu [data-action]').on('click', function (e) {
             break;
 
         case 'add-under':
+            currentRowIndex();
+            document.body.children[0].children[1].children[indexOfCurrentRow].insertAdjacentHTML("afterend", "<tr><th>"+numeral[indexOfCurrentRow]+"</th></th></tr>");
+            renameRow();
+            addCell(1);
+            renameInput();
             break;
 
         case 'remove':
