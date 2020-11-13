@@ -220,6 +220,10 @@ jQuery('#row-menu [data-action]').on('click', function (e) {
             break;
 
         case 'remove':
+            currentRowIndex();
+            document.body.children[0].children[1].children[indexOfCurrentRow].remove();
+            renameRow();
+            renameInput();
             break;
     }
 
