@@ -31,7 +31,7 @@ function Csv() {
 
             return string;
         }
-        string.map((item, index)=>{string[index]=item.split(separator);});
+        string.map((item, index)=>string[index]=item.split(separator));
         return string;
     }
     this.generate = (array, separator) =>{
