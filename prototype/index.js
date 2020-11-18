@@ -37,11 +37,9 @@ function Csv() {
     }
     this.generate = (array, separator) =>{
         if (separator===undefined){
-            array = array.join(',');
-            return array;
+            return array.join(',');
         }else {
-            array = array.join(separator);
-            return array;
+            return array.join(separator);
         }
     }
 }
