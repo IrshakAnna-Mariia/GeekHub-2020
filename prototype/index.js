@@ -30,10 +30,9 @@ function Csv() {
             if(!(tabLength===-1)){string=[...tab];}
 
             return string;
-        } else {
-            string.map((item, index)=>{string[index]=item.split(separator);});
-            return string;
         }
+        string.map((item, index)=>{string[index]=item.split(separator);});
+        return string;
     }
     this.generate = (array, separator) =>{
         if (separator===undefined){
