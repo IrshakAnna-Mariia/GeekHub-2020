@@ -48,3 +48,7 @@ Csv.prototype.generate = (array, separator) => {
   if (separator === undefined) return joinArray(',', arrayCsv);
   return joinArray(separator, arrayCsv);
 };
+function CsvArray() {
+
+}
+CsvArray = new Array(0);
