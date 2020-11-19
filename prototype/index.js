@@ -41,11 +41,7 @@ const parseString = function parseStr(string, separator) {
   stringCsv = stringCsv.map((item, index) => stringCsv[index] = item.split(separator));
   return stringCsv;
 };
-Csv.prototype.parse = (string, separator) => {
-  if (separator === undefined) return parseString(string);
-  return  parseString(string, separator);
-}
-Csv.prototype.generate = function generateString(array, separator) {
+const generateString = function generateStr(array, separator) {
   let arrayCsv = [...array];
   let joinArray = function joinArr(localSeparator) {
     if (!(array[0][0].length === 1)) {
@@ -57,6 +53,14 @@ Csv.prototype.generate = function generateString(array, separator) {
   if (separator === undefined) return joinArray(',', arrayCsv);
   return joinArray(separator, arrayCsv);
 };
+Csv.prototype.parse = (string, separator) => {
+  if (separator === undefined) return parseString(string);
+  return  parseString(string, separator);
+}
+Csv.prototype.generate = (array, separator) => {
+  if (separator === undefined) return generateString(array);
+  return  generateString(array, separator);
+}
 
 
 function CsvArray() {
@@ -70,4 +74,7 @@ CsvArray.prototype.parse = (string, separator) => {
   csvArray = csvArray.map((item) => CsvArray.prototype.push(item));
   return csvArray;
 };
-//CsvArray.prototype.generate = () => {};
+CsvArray.prototype.generate = (separator) => {
+  if (separator === undefined) return generateString(CsvArray.prototype);
+  return generateString(CsvArray.prototype, separator);
+};
