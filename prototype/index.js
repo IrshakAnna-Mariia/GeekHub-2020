@@ -40,7 +40,7 @@ Csv.prototype.generate = (array, separator) => {
   let arrayCsv = [...array];
   let joinArray = function joinArr(localSeparator) {
     if (!(array[0][0].length === 1)) {
-      arrayCsv = arrayCsv.map((item, index) => arrayCsv[index] = item.join(localSeparator))
+      arrayCsv = arrayCsv.map((item, index) => arrayCsv[index] = item.join(localSeparator));
       return arrayCsv.join('\n');
     }
     return arrayCsv.join(localSeparator);
