@@ -37,8 +37,14 @@ Csv.prototype.parse = (string, separator) => {
   return stringCsv;
 };
 Csv.prototype.generate = (array, separator) => {
-  let newArray = [...array];
-  if (!(array[0][0].length === 1)) newArray = newArray.join('\n');
-  if (separator === undefined) return newArray.join(',');
-  return newArray.join(separator);
+  let arrayCsv = [...array];
+  let joinArray = function joinArr(localSeparator) {
+    if (!(array[0][0].length === 1)) {
+      arrayCsv = arrayCsv.map((item, index) => arrayCsv[index] = item.join(localSeparator))
+      return arrayCsv.join('\n');
+    }
+    return arrayCsv.join(localSeparator);
+  };
+  if (separator === undefined) return joinArray(',', arrayCsv);
+  return joinArray(separator, arrayCsv);
 };
