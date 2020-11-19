@@ -1,4 +1,4 @@
-const alphabet_a = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+const alphabet_A = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 const numeral = ['1', '2', '3','4', '5', '6', '7', '8', '9', '10', '11','12', '13', '14', '15', '16','17','18', '19', '20', '21', '22', '23', '24', '25', '26'];
 function Csv() {
 
@@ -72,9 +72,18 @@ CsvArray.prototype.parse = (string, separator) => {
   if (separator === undefined) csvArray = parseString(string);
   else csvArray = parseString(string, separator);
   csvArray = csvArray.map((item) => CsvArray.prototype.push(item));
-  return csvArray;
 };
 CsvArray.prototype.generate = (separator) => {
   if (separator === undefined) return generateString(CsvArray.prototype);
   return generateString(CsvArray.prototype, separator);
 };
+CsvArray.prototype.getCell = (nameOfCell) => {
+  const cell = nameOfCell.trim().split('');
+  let column;
+  let row;
+  for (let counter = 0; counter < alphabet_A.length; counter+=1){
+    if (cell[0] === alphabet_A[counter]) column = counter;
+    if (cell[1] === numeral[counter]) row = counter;
+  }
+  return CsvArray.prototype[row][column];
+}
