@@ -38,20 +38,20 @@ const parseString = function parseStr(string, separator) {
 
     return stringCsv;
   }
-  stringCsv = stringCsv.map((item, index) => {stringCsv[index] = item.split(separator)});
+  stringCsv = stringCsv.map((item, index) => (stringCsv[index] = item.split(separator)));
   return stringCsv;
 };
 const generateString = function generateStr(array, separator) {
   let arrayCsv = [...array];
   const joinArray = function joinArr(localSeparator) {
     if (!(array[0][0].length === 1)) {
-      arrayCsv = arrayCsv.map((item, index) => {arrayCsv[index] = item.join(localSeparator)});
+      arrayCsv = arrayCsv.map((item, index) => (arrayCsv[index] = item.join(localSeparator)));
       return arrayCsv.join('\n');
     }
     return arrayCsv.join(localSeparator);
   };
-  if (separator === undefined) return joinArray(',', arrayCsv);
-  return joinArray(separator, arrayCsv);
+  if (separator === undefined) return joinArray(',');
+  return joinArray(separator);
 };
 Csv.prototype.parse = (string, separator) => {
   if (separator === undefined) return parseString(string);
