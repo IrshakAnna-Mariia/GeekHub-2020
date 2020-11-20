@@ -1,5 +1,5 @@
-const alphabet_A = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-const numeral = ['1', '2', '3','4', '5', '6', '7', '8', '9', '10', '11','12', '13', '14', '15', '16','17','18', '19', '20', '21', '22', '23', '24', '25', '26'];
+const alphabetCaps = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+const numeral = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26'];
 function Csv() {
 
 }
@@ -27,7 +27,7 @@ const parseString = function parseStr(string, separator) {
     const tabLength = tab.reduce((pr, item, index) => {
       if (!(item.indexOf(' ') === -1)) tab[index] = item.split(' ');
       else return -1;
-      if (!(pr === undefined)) if (!(pr===tab[index].length)) return -1;
+      if (!(pr === undefined)) if (!(pr === tab[index].length)) return -1;
       if (pr === -1) return -1;
       return tab[index].length;
     }, undefined);
@@ -38,14 +38,14 @@ const parseString = function parseStr(string, separator) {
 
     return stringCsv;
   }
-  stringCsv = stringCsv.map((item, index) => stringCsv[index] = item.split(separator));
+  stringCsv = stringCsv.map((item, index) => {stringCsv[index] = item.split(separator)});
   return stringCsv;
 };
 const generateString = function generateStr(array, separator) {
   let arrayCsv = [...array];
-  let joinArray = function joinArr(localSeparator) {
+  const joinArray = function joinArr(localSeparator) {
     if (!(array[0][0].length === 1)) {
-      arrayCsv = arrayCsv.map((item, index) => arrayCsv[index] = item.join(localSeparator));
+      arrayCsv = arrayCsv.map((item, index) => {arrayCsv[index] = item.join(localSeparator)});
       return arrayCsv.join('\n');
     }
     return arrayCsv.join(localSeparator);
@@ -55,13 +55,12 @@ const generateString = function generateStr(array, separator) {
 };
 Csv.prototype.parse = (string, separator) => {
   if (separator === undefined) return parseString(string);
-  return  parseString(string, separator);
-}
+  return parseString(string, separator);
+};
 Csv.prototype.generate = (array, separator) => {
   if (separator === undefined) return generateString(array);
-  return  generateString(array, separator);
-}
-
+  return generateString(array, separator);
+};
 
 function CsvArray() {
 
@@ -81,9 +80,9 @@ CsvArray.prototype.getCell = (nameOfCell) => {
   const cell = nameOfCell.trim().split('');
   let column;
   let row;
-  for (let counter = 0; counter < alphabet_A.length; counter+=1){
-    if (cell[0] === alphabet_A[counter]) column = counter;
+  for (let counter = 0; counter < alphabetCaps.length; counter += 1) {
+    if (cell[0] === alphabetCaps[counter]) column = counter;
     if (cell[1] === numeral[counter]) row = counter;
   }
   return CsvArray.prototype[row][column];
-}
+};
