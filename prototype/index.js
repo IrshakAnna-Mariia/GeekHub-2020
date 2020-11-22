@@ -38,14 +38,14 @@ const parseString = function parseStr(string, separator) {
 
     return stringCsv;
   }
-  stringCsv.map(function toSplit(item, index){stringCsv[index] = item.split(separator)});
+  stringCsv.map((item, index) => (stringCsv[index] = item.split(separator)));
   return stringCsv;
 };
 const generateString = function generateStr(array, separator) {
   let arrayCsv = [...array];
   const joinArray = function joinArr(localSeparator) {
     if (!(array[0][0].length === 1)) {
-      arrayCsv.map(function toJoin(item, index) {arrayCsv[index] = item.join(localSeparator)});
+      arrayCsv.map((item, index) => (arrayCsv[index] = item.join(localSeparator)));
       return arrayCsv.join('\n');
     }
     return arrayCsv.join(localSeparator);
