@@ -1,0 +1,22 @@
+{
+  "name": "gh",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "style-loader": "^2.0.0"
+  },
+  "devDependencies": {
+    "css-loader": "^5.0.1",
+    "less": "^3.12.2",
+    "less-loader": "^7.1.0",
+    "loader": "^2.1.1",
+    "style": "0.0.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
