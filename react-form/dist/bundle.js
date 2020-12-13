@@ -70,9 +70,10 @@ var UserForm = /*#__PURE__*/function (_PureComponent) {
     };
 
     _this.addPhone = function () {
-      _this.setState(function () {
+      _this.setState(function (_ref) {
+        var phones = _ref.phones;
         return {
-          phones: [].concat(_toConsumableArray(_this.state.phones), [{
+          phones: [].concat(_toConsumableArray(phones), [{
             number: "",
             type: "home"
           }])
@@ -81,8 +82,8 @@ var UserForm = /*#__PURE__*/function (_PureComponent) {
     };
 
     _this.deleteIndex = function (e) {
-      _this.setState(function (_ref) {
-        var phones = _ref.phones;
+      _this.setState(function (_ref2) {
+        var phones = _ref2.phones;
         return {
           phones: [].concat(_toConsumableArray(phones.slice(0, Number(e.target.value))), _toConsumableArray(phones.slice(Number(e.target.value) + 1)))
         };
@@ -187,17 +188,17 @@ var UserForm = /*#__PURE__*/function (_PureComponent) {
       })), phones.map(function (cell, index) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
           className: "input-group mb-3",
-          key: phones[index].number
+          key: cell.number
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
           type: "text",
           className: "form-control",
-          defaultValue: phones[index].number,
+          defaultValue: cell.number,
           style: {
-            background: _this2.checkPhone(phones[index].type, phones[index].number) ? success : error
+            background: _this2.checkPhone(cell.type, cell.number) ? success : error
           }
         }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("select", {
           className: "custom-select",
-          defaultValue: phones[index].type
+          defaultValue: cell.type
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("option", {
           value: "home"
         }, "\u0414\u043E\u043C\u0430\u0448\u043D\u0456\u0439"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("option", {
