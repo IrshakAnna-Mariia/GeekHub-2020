@@ -13,9 +13,9 @@ export default class UserForm extends PureComponent {
             phones: this.props.user.phones
         }
         this.addPhone = () => {
-            this.setState(() => {
+            this.setState(({phones}) => {
                 return {
-                    phones: [...this.state.phones, {number: "", type: "home"}]
+                    phones: [...phones, {number: "", type: "home"}]
                 }
             })
         }
@@ -129,15 +129,15 @@ export default class UserForm extends PureComponent {
                     {phones.map((cell, index) => {
                         return (
                             <div className="input-group mb-3"
-                                 key={phones[index].number}
+                                 key={cell.number}
                             >
                                 <input
                                     type="text"
                                     className="form-control"
-                                    defaultValue={phones[index].number}
-                                    style={{background: this.checkPhone(phones[index].type, phones[index].number) ? success : error}}
+                                    defaultValue={cell.number}
+                                    style={{background: this.checkPhone(cell.type, cell.number) ? success : error}}
                                 />
-                                <select className="custom-select" defaultValue={phones[index].type}>
+                                <select className="custom-select" defaultValue={cell.type}>
                                     <option value="home">Домашній</option>
                                     <option value="mobile">Мобільний</option>);
                                 </select>
