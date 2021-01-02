@@ -1,7 +1,5 @@
-import React, {PureComponent} from 'react';
+import React from 'react';
 import styled from 'styled-components';
-
-const widthBar = 360;
 
 export default class Slider extends React.PureComponent {
     constructor(props) {
@@ -10,6 +8,7 @@ export default class Slider extends React.PureComponent {
             min: this.props.min,
             max: this.props.max,
             value: this.props.value,
+            widthBar: 360
         }
 
         this.onChangeInput = (e) => {
@@ -28,7 +27,7 @@ export default class Slider extends React.PureComponent {
         document.body.addEventListener('mouseup', this.onDragEnd);
     };
     onDrag = (e) => {
-        let {min, max} = this.state;
+        let {min, max, widthBar} = this.state;
         let newValue = Math.round((((e.clientX - this.firstX)*(max-min)/widthBar)+this.valueX));
         if ((newValue >= min) && (newValue <= max)) {this.setState({value: newValue});}
         else if ((newValue < min)) {this.setState({value: min});}
@@ -40,24 +39,24 @@ export default class Slider extends React.PureComponent {
         document.body.removeEventListener('mouseup', this.onDragEnd);
     };
 
-    valueOnSlider(min, max, value) {
+    valueOnSlider(min, max, value, widthBar) {
         if (value < min) {return 0}
         else if (value > max) {return widthBar}
         return (widthBar*(value-min)/(max-min));
     };
 
     render() {
-        let {min, max, value} = this.state;
+        let {min, max, value, widthBar} = this.state;
         return (
             <Root>
                 <input value={value} onChange={this.onChangeInput}/>
 
-                <Bar>
+                <Bar width={widthBar}>
                     <Bar2 width={widthBar*(value-min)/(max-min)}>
                         <Handler
-                            value={this.valueOnSlider(min, max, value)}
+                            value={this.valueOnSlider(min, max, value, widthBar)}
                             onMouseDown={this.onDragStart}
-                    />
+                        />
                     </Bar2>
                 </Bar>
                 <p>*from {min} to {max}</p>
@@ -65,7 +64,6 @@ export default class Slider extends React.PureComponent {
         );
     }
 }
-
 
 //region ====================== Styles ========================================
 
@@ -75,7 +73,7 @@ const Root = styled.div`
 
 const Bar = styled.div`
     position: relative;
-    width: ${widthBar + 'px'};
+    width: ${p => p.width + 'px'};
 	height: 2px;
 	background-color: black;
 	margin-top: 10px;
