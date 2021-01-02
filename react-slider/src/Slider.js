@@ -1,25 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
 
-export default class DoubleSlider extends React.PureComponent {
+export default class Slider extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
             min: this.props.min,
             max: this.props.max,
-            startValue: this.props.startValue,
-            endValue: this.props.endValue,
-            onChange: this.props.onChange,
+            value: this.props.value,
             widthBar: 0,
         }
 
-        this.onChangeStartInput = (e) => {
-            this.setState({startValue: e.target.value})
-        }
-        this.onChangeEndInput = (e) => {
-            this.setState({endValue: e.target.value})
-        }
+        this.onChangeInput = (e) => {
+            this.setState({value: e.target.value});
+        };
         this.myRef = React.createRef()
+
     }
 
     componentDidMount() {
@@ -28,84 +24,43 @@ export default class DoubleSlider extends React.PureComponent {
 
     firstX = 0;
     valueX = 0;
-    onDragStart1 = (e) => {
-        let {startValue} = this.state;
-        this.valueX = startValue;
+    onDragStart = (e) => {
+        let {value} = this.state;
+        this.valueX = value;
         this.firstX = e.clientX;
-        document.body.addEventListener('mousemove', this.onDrag1);
-        document.body.addEventListener('mouseup', this.onDragEnd1);
+        document.body.addEventListener('mousemove', this.onDrag);
+        document.body.addEventListener('mouseup', this.onDragEnd);
     };
-    onDrag1 = (e) => {
+    onDrag = (e) => {
         let {min, max, widthBar} = this.state;
         let newValue = Math.round((((e.clientX - this.firstX)*(max-min)/widthBar)+this.valueX));
-        if ((newValue >= min) && (newValue <= max)) {this.setState({startValue: newValue});}
-        else if ((newValue < min)) {this.setState({startValue: min});}
-        else {this.setState({startValue: max});}
+        if ((newValue >= min) && (newValue <= max)) {this.setState({value: newValue});}
+        else if ((newValue < min)) {this.setState({value: min});}
+        else {this.setState({value: max});}
     };
-    onDragEnd1 = (e) => {
-        this.onDrag1(e);
-        this.onChange();
-        document.body.removeEventListener('mousemove', this.onDrag1);
-        document.body.removeEventListener('mouseup', this.onDragEnd1);
-    };
-
-    onDragStart2 = (e) => {
-        let {endValue} = this.state;
-        this.valueX = endValue;
-        this.firstX = e.clientX;
-        document.body.addEventListener('mousemove', this.onDrag2);
-        document.body.addEventListener('mouseup', this.onDragEnd2);
-    };
-    onDrag2 = (e) => {
-        let {min, max, widthBar} = this.state;
-        let newValue = Math.round((((e.clientX - this.firstX)*(max-min)/widthBar)+this.valueX));
-        if ((newValue >= min) && (newValue <= max)) {this.setState({endValue: newValue});}
-        else if ((newValue < min)) {this.setState({endValue: min});}
-        else {this.setState({endValue: max});}
-    };
-    onDragEnd2 = (e) => {
-        this.onDrag2(e);
-        this.onChange();
-        document.body.removeEventListener('mousemove', this.onDrag2);
-        document.body.removeEventListener('mouseup', this.onDragEnd2);
+    onDragEnd = (e) => {
+        this.onDrag(e);
+        document.body.removeEventListener('mousemove', this.onDrag);
+        document.body.removeEventListener('mouseup', this.onDragEnd);
     };
 
     valueOnSlider(min, max, value, widthBar) {
         if (value < min) {return 0}
         else if (value > max) {return widthBar}
-        return (widthBar*((value-min)/(max-min)));
-    }
-
-    onChange = () => {
-        let {startValue, endValue} = this.state;
-        if (startValue > endValue) {
-            let minChange = endValue;
-            this.setState({endValue: startValue})
-            this.setState({startValue: minChange})
-        }
-    }
+        return (widthBar*(value-min)/(max-min));
+    };
 
     render() {
-        let {min, max, startValue, endValue, widthBar} = this.state;
+        let {min, max, value, widthBar} = this.state;
         return (
             <Root>
-                <input value={startValue} onChange={this.onChangeStartInput}/>
-                <input value={endValue} onChange={this.onChangeEndInput}/>
+                <input value={value} onChange={this.onChangeInput}/>
 
                 <Bar ref={this.myRef}>
-                    <Bar2
-                        width={widthBar * (endValue - min) / (max - min)-widthBar * (startValue - min) / (max - min)}
-                        marginLeft={widthBar * (startValue - min) / (max - min)}
-                    >
+                    <Bar2 width={widthBar*(value-min)/(max-min)}>
                         <Handler
-                            value={this.valueOnSlider(min, max, startValue, widthBar)}
-                            onMouseDown={this.onDragStart1}
-                            marginLeft={(widthBar * (startValue - min) / (max - min))*(-1)}
-                        />
-                        <Handler
-                            value={this.valueOnSlider(min, max, endValue, widthBar)}
-                            onMouseDown={this.onDragStart2}
-                            marginLeft={(widthBar * (startValue - min) / (max - min))*(-1)}
+                            value={this.valueOnSlider(min, max, value, widthBar)}
+                            onMouseDown={this.onDragStart}
                         />
                     </Bar2>
                 </Bar>
@@ -114,7 +69,6 @@ export default class DoubleSlider extends React.PureComponent {
         );
     }
 }
-
 
 //region ====================== Styles ========================================
 
@@ -127,7 +81,7 @@ const Bar = styled.div`
     width: 360px;
 	height: 2px;
 	background-color: black;
-    margin-top: 10px;
+	margin-top: 10px;
 `;
 
 const Bar2 = styled.div `
@@ -135,18 +89,16 @@ const Bar2 = styled.div `
     width: ${p => p.width + 'px'};
     height: 2px;
     background-color: green;
-  margin-left: ${p => p.marginLeft + 'px'};
     margin-top: 10px;
-`
+`;
 
 const Handler = styled.div`
     position: absolute;
 	height: 10px;
 	width: 10px;
 	border-radius: 5px;
-    background-color: red;
+	background-color: red;
 	top: -4px;
-    margin-left: ${p => p.marginLeft + 'px'};
 	left: ${p => p.value + 'px'};
 `;
 
