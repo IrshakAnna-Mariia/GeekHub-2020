@@ -10,7 +10,7 @@ export default class DoubleSlider extends React.PureComponent {
             startValue: this.props.startValue,
             endValue: this.props.endValue,
             onChange: this.props.onChange,
-            widthBar: 360
+            widthBar: 0,
         }
 
         this.onChangeStartInput = (e) => {
@@ -19,6 +19,11 @@ export default class DoubleSlider extends React.PureComponent {
         this.onChangeEndInput = (e) => {
             this.setState({endValue: e.target.value})
         }
+        this.myRef = React.createRef()
+    }
+
+    componentDidMount() {
+        this.setState({widthBar: this.myRef.current.clientWidth})
     }
 
     firstX = 0;
@@ -87,7 +92,7 @@ export default class DoubleSlider extends React.PureComponent {
                 <input value={startValue} onChange={this.onChangeStartInput}/>
                 <input value={endValue} onChange={this.onChangeEndInput}/>
 
-                <Bar width={widthBar}>
+                <Bar ref={this.myRef}>
                     <Bar2
                         width={widthBar * (endValue - min) / (max - min)-widthBar * (startValue - min) / (max - min)}
                         marginLeft={widthBar * (startValue - min) / (max - min)}
@@ -119,7 +124,7 @@ const Root = styled.div`
 
 const Bar = styled.div`
     position: relative;
-    width: ${p => p.width + 'px'};
+    width: 360px;
 	height: 2px;
 	background-color: black;
     margin-top: 10px;
