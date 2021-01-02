@@ -8,13 +8,18 @@ export default class Slider extends React.PureComponent {
             min: this.props.min,
             max: this.props.max,
             value: this.props.value,
-            widthBar: 360
+            widthBar: 0,
         }
 
         this.onChangeInput = (e) => {
             this.setState({value: e.target.value});
         };
+        this.myRef = React.createRef()
 
+    }
+
+    componentDidMount() {
+        this.setState({widthBar: this.myRef.current.clientWidth})
     }
 
     firstX = 0;
@@ -51,7 +56,7 @@ export default class Slider extends React.PureComponent {
             <Root>
                 <input value={value} onChange={this.onChangeInput}/>
 
-                <Bar width={widthBar}>
+                <Bar ref={this.myRef}>
                     <Bar2 width={widthBar*(value-min)/(max-min)}>
                         <Handler
                             value={this.valueOnSlider(min, max, value, widthBar)}
@@ -73,7 +78,7 @@ const Root = styled.div`
 
 const Bar = styled.div`
     position: relative;
-    width: ${p => p.width + 'px'};
+    width: 360px;
 	height: 2px;
 	background-color: black;
 	margin-top: 10px;
