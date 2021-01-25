@@ -15,8 +15,6 @@ export default class App extends Component {
                 />
                 <Footer
                     clearCompletedTodo = {() => this.props.onClearCompleted()}
-                    openCompletedTodo = {() => this.props.onViewCompleted()}
-                    counterOfItem = {() => this.props.counterOfItemLeft()}
                 />
             </section>
         )
