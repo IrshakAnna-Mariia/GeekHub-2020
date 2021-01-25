@@ -12,15 +12,6 @@ function visualFilter(state = ALL, action) {
     }
 }
 
-function setCounter(state = 0, action) {
-    switch (action.type) {
-        case SET_COUNTER:
-            return ;
-        default:
-            return state;
-    }
-}
-
 function todoList(state = [
     {text: "Taste JavaScript", complete: true},
     {text: "Buy a unicorn", complete: false}
@@ -52,7 +43,6 @@ function todoList(state = [
 
 const todoListApp = combineReducers({
     visualFilter,
-    setCounter,
     todoList
 });
 
