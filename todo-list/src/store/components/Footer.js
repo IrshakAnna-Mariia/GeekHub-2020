@@ -8,15 +8,12 @@ export default class Footer extends Component {
     onClickCompleted() {
         this.props.openCompletedTodo();
     }
-    counter(){
-        return this.props.counterOfItem()
-    }
 
     render() {
         return (
             <footer className="footer">
                 <span className="todo-count">
-                    <strong>{this.counter()}</strong>
+                    <strong>0</strong>
                     item left
                 </span>
                 <ul className="filters">
@@ -34,7 +31,6 @@ export default class Footer extends Component {
                     <li>
                         <a
                             href={"#/completed"}
-                            onClick={this.onClickCompleted()}
                         >Completed</a>
                     </li>
                 </ul>
