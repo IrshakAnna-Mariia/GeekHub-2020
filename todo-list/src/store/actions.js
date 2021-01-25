@@ -1,31 +1,49 @@
-export const ADD_TODO = 'ADD_TODO';
-export const REMOVE_TODO = 'REMOVE_TODO';
-export const SET_FILTER = 'SET_FILTER';
-export const IS_COMPLETED = 'IS_COMPLETED';
-export const SET_COUNTER = 'SET_COUNTER';
+import {ADD_TODO, REMOVE_TODO, SET_FILTER, Filters, IS_COMPLETED, SET_COUNTER} from "./actions";
+import {combineReducers} from "redux";
 
-export const Filters = {
-    ALL: 'ALL',
-    ACTIVE: 'ACTIVE',
-    COMPLETED: 'COMPLETED'
+const {ALL} = Filters;
+
+function visualFilter(state = ALL, action) {
+    switch (action.type) {
+        case SET_FILTER:
+            return action.filter;
+        default:
+            return state;
+    }
 }
 
-export function addTodo(text) {
-    return {type: ADD_TODO, text}
+function todoList(state = [
+    {text: "Taste JavaScript", complete: true},
+    {text: "Buy a unicorn", complete: false}
+], action) {
+    switch (action.type) {
+        case ADD_TODO:
+            return [
+                ...state,
+                {
+                    text: action.text,
+                    complete: false
+                }
+            ];
+        case REMOVE_TODO:
+            return [
+                ...state.slice(0, action.index),
+                ...state.slice(action.index + 1)
+            ];
+        case IS_COMPLETED:
+            return [
+                ...state.slice(0, action.index),
+                Object.assign({}, state[action.index], {complete:!action.complete}),
+                ...state.slice(action.index + 1)
+            ]
+        default:
+            return state;
+    }
 }
 
-export function removeTodo(index) {
-    return {type: REMOVE_TODO, index}
-}
+const todoListApp = combineReducers({
+    visualFilter,
+    todoList
+});
 
-export function isCompleted(index) {
-    return {type: IS_COMPLETED, index}
-}
-
-export function setFilter(filter) {
-    return {type: SET_FILTER, filter}
-}
-
-export function setCounter(itemLeft) {
-    return {type: SET_FILTER, itemLeft}
-}
+export  default todoListApp;
