@@ -15,6 +15,10 @@ export default class App extends Component {
                 />
                 <Footer
                     clearCompletedTodo = {() => this.props.onClearCompleted()}
+                    openAllTodo = {() => this.props.onAll()}
+                    openActiveTodo = {() => this.props.onActive()}
+                    openCompletedTodo = {() => this.props.onCompletedClick()}
+                    countTodos = {this.props.count}
                 />
             </section>
         )
