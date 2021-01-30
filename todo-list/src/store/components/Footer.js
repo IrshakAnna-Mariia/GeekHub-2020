@@ -5,6 +5,12 @@ export default class Footer extends Component {
     onClickClear() {
         this.props.clearCompletedTodo();
     }
+    onClickAll() {
+        this.props.openAllTodo();
+    }
+    onClickActive() {
+        this.props.openActiveTodo();
+    }
     onClickCompleted() {
         this.props.openCompletedTodo();
     }
@@ -13,7 +19,7 @@ export default class Footer extends Component {
         return (
             <footer className="footer">
                 <span className="todo-count">
-                    <strong>0</strong>
+                    <strong>{this.props.countTodos}</strong>
                     item left
                 </span>
                 <ul className="filters">
@@ -21,16 +27,19 @@ export default class Footer extends Component {
                         <a
                             className="selected"
                             href={"#/"}
+                            onClick={() => {this.onClickAll()}}
                         >All</a>
                     </li>
                     <li>
                         <a
                             href={"#/active"}
+                            onClick={() => {this.onClickActive()}}
                         >Active</a>
                     </li>
                     <li>
                         <a
                             href={"#/completed"}
+                            onClick={() => {this.onClickCompleted()}}
                         >Completed</a>
                     </li>
                 </ul>
