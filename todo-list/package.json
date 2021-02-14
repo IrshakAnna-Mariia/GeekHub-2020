@@ -9,8 +9,8 @@
     "build": "webpack --mode production"
   },
   "keywords": [],
-  "author": "Vladilen Minin <vladilen.minin@gmail.com>",
-  "license": "ISC",
+  "author": "",
+  "license": "MIT",
   "devDependencies": {
     "babel-loader": "^8.2.2",
     "css-loader": "^3.4.2",
