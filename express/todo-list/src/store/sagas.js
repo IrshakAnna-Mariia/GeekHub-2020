@@ -1,9 +1,9 @@
-import {takeEvery, call, put, takeLatest, takeLeading, select} from "redux-saga/effects"
-import {SET_TODOS, ADD_TODO, REMOVE_TODO, IS_COMPLETED, IS_EDIT} from "./actions";
+import { call, put, takeLatest, takeLeading, select} from "redux-saga/effects"
+import {SET_TODOS, SET_TODOS_FILTER, ADD_TODO, REMOVE_TODO, IS_COMPLETED, IS_EDIT} from "./actions";
 
 
 export function* watchSaga() {
-    yield takeLeading(SET_TODOS, getResponse);
+    yield takeLeading([SET_TODOS, SET_TODOS_FILTER], getResponse);
     yield takeLatest([ADD_TODO,REMOVE_TODO,IS_COMPLETED,IS_EDIT], postResponse);
 
 }
@@ -11,6 +11,7 @@ export function* watchSaga() {
 function* getResponse() {
     const payload = yield call(fetchTodos);
     yield put({type:SET_TODOS, payload});
+    yield put({type:SET_TODOS_FILTER, payload});
 }
 
 function* postResponse(){
