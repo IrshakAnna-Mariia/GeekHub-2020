@@ -1,0 +1,4 @@
+{
+  "port": 8000,
+  "urlMongodb": "mongodb+srv://AnnaMariia:1234qwer@cluster0.c68hd.mongodb.net/app?retryWrites=true&w=majority"
+}
