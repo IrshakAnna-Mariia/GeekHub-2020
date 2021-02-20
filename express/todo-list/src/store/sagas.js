@@ -9,9 +9,13 @@ export function* watchSaga() {
 }
 
 function* getResponse() {
-    const payload = yield call(fetchTodos);
-    yield put({type:SET_TODOS, payload});
-    yield put({type:SET_TODOS_FILTER, payload});
+    try {
+        const payload = yield call(fetchTodos);
+        yield put({type: SET_TODOS, payload});
+        yield put({type: SET_TODOS_FILTER, payload});
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 function* postResponse(){
