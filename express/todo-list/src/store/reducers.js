@@ -14,6 +14,13 @@ const filterSlice = createSlice({
     reducers: {
         setTodos: (state, action) => {
             set_Todos(state, action.payload);
+            let count = 0;
+            action.payload.map((cell) => {
+                if (cell.complete === false) {
+                    count = count + 1;
+                }
+            })
+            state.counter = count;
         },
         forCompleteTodo: (state, action) => {
             let currentIndex;
