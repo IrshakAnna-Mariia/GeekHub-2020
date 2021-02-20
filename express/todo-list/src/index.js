@@ -10,7 +10,7 @@ import App from './app'
 import thunk from "redux-thunk";
 import createSagaMiddleware from "redux-saga";
 import {watchSaga} from "./store/sagas";
-import {setTodosForAll} from "./store/actions";
+import {setTodosForAll, counterCompletedTodo, setTodos} from "./store/actions";
 
 const saga = createSagaMiddleware();
 
@@ -19,7 +19,8 @@ saga.run(watchSaga);
 
 render();
 store.subscribe(render);
-store.dispatch(setTodosForAll([]))
+store.dispatch(setTodosForAll([]));
+store.dispatch(setTodos([]));
 
 function render () {
 
