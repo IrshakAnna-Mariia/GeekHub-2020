@@ -4,7 +4,7 @@ import {SET_TODOS, SET_TODOS_FILTER, ADD_TODO, REMOVE_TODO, IS_COMPLETED, IS_EDI
 
 export function* watchSaga() {
     yield takeLeading([SET_TODOS, SET_TODOS_FILTER], getResponse);
-    yield takeLatest([ADD_TODO,REMOVE_TODO,IS_COMPLETED,IS_EDIT], postResponse);
+    yield takeLatest([ADD_TODO,REMOVE_TODO,IS_COMPLETED], postResponse);
 
 }
 
@@ -15,15 +15,18 @@ function* getResponse() {
 }
 
 function* postResponse(){
-    const todos = yield select(state => state.todoList);
-    yield fetch("http://localhost:8000/post", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8'
-        },
-        body: JSON.stringify(todos),
-    });
-
+    try {
+        const todos = yield select(state => state.todoList);
+        yield fetch("http://localhost:8000/post", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(todos),
+        });
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 async function fetchTodos() {
