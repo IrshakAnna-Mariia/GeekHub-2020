@@ -4,7 +4,16 @@ export const IS_COMPLETED = 'IS_COMPLETED';
 export const IS_EDIT = 'IS_EDIT';
 export const SET_TODOS_FILTER = 'filter/setTodos';
 export const SET_TODOS = 'setTodos';
+export const REWRITE_TODO = 'rewriteTodo';
+export const DELETE_WRITTEN_TODO = 'deleteWrittenTodo'
 
+export function writeTodo(text, newText) {
+    return {type: REWRITE_TODO, text, newText}
+}
+
+export function removeWrittenTodo(text) {
+    return {type: DELETE_WRITTEN_TODO, text}
+}
 
 export function addTodo(text) {
     return {type: ADD_TODO, text}
