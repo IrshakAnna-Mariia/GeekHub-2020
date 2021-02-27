@@ -1,0 +1,14 @@
+[
+    {
+        "text": "Taste JavaScript",
+        "complete": true
+    },
+    {
+        "text": "Buy a unicorn",
+        "complete": false
+    },
+    {
+        "text": "Learn English",
+        "complete": false
+    }
+]
