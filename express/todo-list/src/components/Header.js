@@ -14,14 +14,7 @@ export default class Header extends Component {
                 ...this.props.todos,
                 {text: input.value + e.key, complete: false}
             ],newValue, input.value)
-        } else {
-            socket.emit('write_todo', [
-                ...this.props.todos,
-                {text: input.value + e.key, complete: false}
-            ], input.value + e.key, input.value)
-        }
-
-        if (e.key === 'Enter'){
+        } else if (e.key === 'Enter') {
             //this.props.dispatch(removeWrittenTodo(input.value))
             this.props.dispatch(addTodo(input.value));
             this.props.dispatch(countAddTodo());
@@ -30,6 +23,11 @@ export default class Header extends Component {
                 {text: input.value, complete: false}
             ]))
             input.value = "";
+        } else {
+            socket.emit('write_todo', [
+                ...this.props.todos,
+                {text: input.value + e.key, complete: false}
+            ], input.value + e.key, input.value)
         }
     }
     inputHTML = (node) => input = node
