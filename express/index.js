@@ -1,6 +1,6 @@
 const express = require('express')
 const config = require('config')
-const mongoose = require('mongoose')
+//const mongoose = require('mongoose')
 const {resolve} = require('path')
 const fs = require("fs")
 const bodyParser = require("body-parser")
@@ -16,13 +16,18 @@ server.use(express.static(
 
 server.use(bodyParser.json())
 
+server.set('io', io)
+
 server.get("/get", (req, res) => {
-    fs.readFile(resolve(__dirname, "todo.json"), 'utf8', (err, data) => {
-        if (err) {
-            console.log("Ny i", err)
-        }
-        res.send(data);
-    });
+    try {
+        fs.readFile(resolve(__dirname, "todo.json"), 'utf8', (err, data) => {
+            res.send(data);
+        });
+    } catch (e) {
+        console.log(e);
+        res.status(502);
+        res.render("<h1> Error: "+ e + "</h1>")
+    }
 })
 
 server.post("/add", (req, res) => {
@@ -31,6 +36,9 @@ server.post("/add", (req, res) => {
         'utf8',
         (err) => {console.log(err)}
     );
+    res.send("<h1>All is okay</h1>");
+
+    io.emit("ad_todo")
     //req.server.get('io').emit('Changes complete')
 })
 
@@ -40,6 +48,9 @@ server.post("/remove", (req, res) => {
         'utf8',
         (err) => {console.log(err)}
     );
+
+    res.send("<h1>All is okay</h1>");
+    io.emit("remove_todo");
 })
 
 server.post("/complete", (req, res) => {
@@ -48,32 +59,16 @@ server.post("/complete", (req, res) => {
         'utf8',
         (err) => {console.log(err)}
     );
+    res.send("<h1>All is okay</h1>");
+    io.emit("completed_todo")
+    /*io.on('connection', socket => {
+        socket.on('completed_todo', (todos) => {
+            io.emit("completed_todo", todos)
+        })
+    });*/
 })
 
-server.set('io', io)
-
 io.on('connection', socket => {
-    socket.on('add_todo', (todos) => {
-        try {
-            io.emit("add_todo", todos)
-        } catch (e) {
-            console.log(e)
-        }
-    })
-    socket.on('remove_todo', (todos) => {
-        try {
-            io.emit("remove_todo", todos)
-        } catch (e) {
-            console.log(e)
-        }
-    })
-    socket.on('completed_todo', (todos) => {
-        try {
-            io.emit("completed_todo", todos)
-        } catch (e) {
-            console.log(e)
-        }
-    })
     socket.on('write_todo', (todos, addTodo_value, lastTodo_value) => {
         try {
             socket.broadcast.emit("write_todo", todos, addTodo_value, lastTodo_value)
