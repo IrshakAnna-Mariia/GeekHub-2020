@@ -13,8 +13,8 @@ socket.on('remove_todo', (todos) => {
     store.dispatch(setTodos([]));
 })
 socket.on('completed_todo', (todos) => {
-    store.dispatch(setTodosForAll([todos]));
-    store.dispatch(setTodos([todos]));
+    store.dispatch(setTodosForAll([]));
+    store.dispatch(setTodos([]));
 })
 socket.on('write_todo', (todos, addTodo_value, lastTodo_value) => {
     if (addTodo_value === '') {
