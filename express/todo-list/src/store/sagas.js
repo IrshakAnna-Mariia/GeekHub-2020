@@ -1,6 +1,9 @@
 import { call, put, takeLatest, takeLeading, select} from "redux-saga/effects"
 import {SET_TODOS, SET_TODOS_FILTER, ADD_TODO, REMOVE_TODO, IS_COMPLETED, IS_EDIT, setTodosForAll} from "./actions";
 import socket from './socket'
+import React from 'react'
+import ReactDom from 'react-dom'
+import Error from "../components/Error";
 
 export function* watchSaga() {
     yield takeLeading([SET_TODOS, SET_TODOS_FILTER], getResponse);
@@ -16,7 +19,7 @@ function* getResponse() {
         yield put({type: SET_TODOS_FILTER, payload});
     } catch (e) {
         console.log(e)
-        alert("Oh, no... Get data is incorrect")
+        ReactDom.render(<Error/>, document.body)
     }
 }
 
@@ -33,6 +36,7 @@ function* postResponse(){
         });
     } catch (e) {
         console.log(e)
+        ReactDom.render(<Error/>, document.body)
     }
 }
 
@@ -49,6 +53,7 @@ function* postResponseRemove(){
         });
     } catch (e) {
         console.log(e)
+        ReactDom.render(<Error/>, document.body)
     }
 }
 
@@ -56,7 +61,7 @@ function* postResponseComplete(){
     try {
         const todos = yield select(state => state.todoList);
         socket.emit('completed_todo', todos);
-        yield fetch("http://localhost:8000/complete", {
+        yield fetch("/complete", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
@@ -65,10 +70,11 @@ function* postResponseComplete(){
         });
     } catch (e) {
         console.log(e)
+        ReactDom.render(<Error/>, document.body)
     }
 }
 
 async function fetchTodos() {
-    const response = await fetch("http://localhost:8000/get");
-    return await response.json();
+    const response = await fetch("/get");
+    return response.json();
 }
