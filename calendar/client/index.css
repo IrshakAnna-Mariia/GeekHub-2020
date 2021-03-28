@@ -1,0 +1,212 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: burlywood;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.container {
+    padding: 16px;
+    width: 600px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.calendarApp{
+    padding: 8px;
+    width: 800px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.containerReg {
+    padding: 16px;
+    width: 600px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+input[type=text],
+input[type=password] {
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+}
+
+input[type=text]:focus,
+input[type=password]:focus {
+    background-color: #ddd;
+    outline: none;
+}
+hr {
+    border: 1px solid #f1f1f1;
+    margin-bottom: 25px;
+}
+
+.registerbth,
+.loginbtn {
+    background-color: #0f2c63;
+    color: white;
+    padding: 16px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+}
+
+.registerbth:hover
+.loginbtn:hover {
+    opacity: 1;
+}
+
+.signIn,
+.register{
+    text-align: center;
+}
+
+.events {
+    font-family: cursive;
+    text-align: center;
+    font-size: 30px;
+}
+
+h1.incorrectEnteredData {
+    font-size: 12px;
+    color: brown;
+}
+
+.resultRegister {
+    background-color: #0f2c63;
+    color: white;
+    border: 1px solid #000000;
+    width: 400px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0.9;
+}
+
+.nameOfMonth {
+    height: 65px;
+    text-align: center;
+}
+
+.tr-left {
+    float: left;
+    margin: 0 15px;
+    width: 0;
+    height: 0;
+    border-top: 25px solid  burlywood;
+    border-right: 50px solid #0f2c63;
+    border-bottom: 25px solid  burlywood;
+}
+
+.month {
+    position: center;
+    margin: 15px 15px;
+    font-size: 40px;
+    color: darkblue;
+
+}
+
+.tr-right {
+    float: right;
+    margin: 0 15px;
+    width: 0;
+    height: 0;
+    border-top: 25px solid burlywood;
+    border-left: 50px solid #0f2c63;
+    border-bottom: 25px solid burlywood;
+}
+
+.calendar {
+    width: 493px;
+    height: 303px;
+    border: 1px solid white;
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.cell {
+    float: left;
+    width: 70px;
+    height: 50px;
+    display: block;
+    font-size: 12px;
+    margin: 0 auto;
+    border: 1px solid #f1f1f1;
+}
+
+.selected {
+    background-color: darkblue;
+    color: #f1f1f1;
+}
+
+.time {
+    font-family: cursive;
+    font-size: 30px;
+}
+
+.time i{
+    text-decoration: underline;
+    text-decoration-color: #dddddd;
+    color: darkblue;
+    font-size: 20px;
+}
+
+.textEvent {
+    padding: 0 50px;
+    font-size: 20px;
+}
+
+.addNew {
+    position: static;
+    float: right;
+    margin: 0 15px;
+    font-size: 40px;
+    color: #111111;
+}
+
+.formAddNew {
+    padding: 16px;
+    width: 600px;
+    display: block;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.setTime input.left {
+    float: left;
+    width: 250px;
+}
+
+.setTime input.right {
+    float: right;
+    width: 250px;
+}
+.setTime b {
+    position: center;
+    padding-top: 25px;
+    font-size: 30px;
+}
+
+.setTime input.wrong {
+    background-color: #a52a2a;
+}
+
+.remove {
+    margin: 0 15px;
+    font-size: 20px;
+    color: #a52a2a;
+}
