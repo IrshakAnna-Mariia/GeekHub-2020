@@ -64,7 +64,7 @@ export default class Main extends Component {
     }
 
     onClick = (newCurrent) => {
-        if (this.state.current > 1 && this.state.current < Number(moment().daysInMonth())) {
+        if (this.state.current > 0 && this.state.current <= 31) {
             this.setState({current: newCurrent})
         }
     }
