@@ -1,58 +1,36 @@
 [
     {
-        "email": "irshakmi@gmail.com",
-        "password": "$2b$10$Nk64N2Uyu9LLBauBAR30oOrX5gJLkdmgOVnZsMIVHJGUq5dmiRU4K",
-        "events": []
+        "_id": "60624999835e582037b777d4",
+        "email": "irshak@gmail.com",
+        "password": "$2b$10$vbVFaiMwqJG8/Wc606oNbO4.BfoPUa74A5.cDINBV1zwJpX8RCtH2",
+        "events": [],
+        "__v": 0
     },
     {
-        "email": "i@fg.dg",
-        "password": "$2b$10$xSAGgDnzdw47FtFdVJ.iVOcRjb6C6/UXI300u6Zsv9N6QcvhuzL3q",
-        "events": []
-    },
-    {
-        "email": "rty@fcghj.xftg",
-        "password": "$2b$10$uLr4z.Le91Zd/5TrjLUQvOuSplZ3WA1YhN5FGp/gQliJSVDFpOaUG",
-        "events": []
-    },
-    {
-        "email": "uyf@dfghj.t",
-        "password": "$2b$10$Qau7ZBClF8/7S2wMZu9dLOy6xz2BC7QEzbw6h9VO7A6h/E/vjdykq",
-        "events": []
-    },
-    {
+        "_id": "6063794dfa7922161f78215c",
         "email": "ia@ia.ia",
-        "password": "$2b$10$nhu0pRT6dEFLBgVExd6VweE4ExN.MH9PBw7wJ1PsL9vKdX0qAzBaS",
+        "password": "$2b$10$c7kRKlgNscQtK3TD8eXNfOJn7yLHsqZ3YJ8i7PC8bUh43F5dblIza",
         "events": [
             {
+                "_id": "6063b3f1a9db421bb87f8acc",
                 "day": "25/3/2021",
-                "time": "9:50",
-                "text": "run"
-            },
-            {
-                "day": "25/3/2020",
-                "time": "11:50",
-                "text": "go to the shop"
-            },
-            {
-                "day": "27/3/2021",
-                "time": "7:30",
-                "text": "catch"
-            },
-            {
-                "day": "3/3/2021",
                 "time": "18:00",
-                "text": "meeting"
+                "text": "Meeting"
             },
             {
-                "day": "8/3/2021",
-                "time": "12:12",
-                "text": "Do it now"
+                "_id": "6063b43834275f1be8130a84",
+                "day": "3/3/2021",
+                "time": "12:00",
+                "text": "To read the book"
             }
-        ]
+        ],
+        "__v": 0
     },
     {
-        "email": "ftu@klk.c",
-        "password": "$2b$10$ZUveCbTABPuJc7aHvEuTm.1EgC7y0.L5fChilrVivKDu7hYlOfGXu",
-        "events": []
+        "_id": "60637a2d76e23f16b969cdc2",
+        "email": "irshakam@gmail.com",
+        "password": "$2b$10$E5U0j1HSb183SXXEqA9PP.pnn9C40d.ZYf.U8IvO80LAbH5gsLi6m",
+        "events": [],
+        "__v": 0
     }
 ]
