@@ -201,8 +201,9 @@ h1.incorrectEnteredData {
     font-size: 30px;
 }
 
-.setTime input.wrong {
-    background-color: #a52a2a;
+.setTime input.wrong,
+input.wrong{
+    background-color: #b84242;
 }
 
 .remove {
