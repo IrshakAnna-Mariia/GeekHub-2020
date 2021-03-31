@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDom from 'react-dom'
 import Error from "../app/Error";
 
-export async function postNewEvent(email, event) {
+export async function postNewEvent(email, events) {
     try {
         let res = await fetch("/add", {
             method: 'POST',
@@ -11,7 +11,7 @@ export async function postNewEvent(email, event) {
                 'Content-Type': 'application/json;charset=utf-8'
             },
             body: JSON.stringify(
-                {email, event}
+                {email, events}
             ),
         });
         return await res.json()
@@ -25,7 +25,7 @@ export async function postNewEvent(email, event) {
     }
 }
 
-export async function postRemoveEvent(email, event) {
+export async function postRemoveEvent(email, events) {
     try {
         let res = await fetch("/remove", {
             method: 'POST',
@@ -34,7 +34,7 @@ export async function postRemoveEvent(email, event) {
                 'Content-Type': 'application/json;charset=utf-8'
             },
             body: JSON.stringify(
-                {email, event}
+                {email, events}
             ),
         });
         return await res.json()
@@ -48,7 +48,7 @@ export async function postRemoveEvent(email, event) {
     }
 }
 
-export async function postEditEvent(email, editedEvent, currentEvent) {
+export async function postEditEvent(email, events) {
     try {
         let res = await fetch("/edit", {
             method: 'POST',
@@ -57,7 +57,7 @@ export async function postEditEvent(email, editedEvent, currentEvent) {
                 'Content-Type': 'application/json;charset=utf-8'
             },
             body: JSON.stringify(
-                {email, editedEvent, currentEvent}
+                {email, events}
             ),
         });
         return await res.json()
