@@ -1,8 +1,6 @@
 import React, { Component} from 'react'
 import {connect} from 'react-redux'
-import {postNewEvent} from '../store/httpMethods'
 import {addEvent} from "../store/actions";
-import Error from "./Error";
 
 let inputHour;
 let inputMinute;
@@ -22,29 +20,25 @@ export default class FormAddNewEvent extends Component {
     text = (node) => inputText = node
 
     onClick = () => {
-        if (checkTime(inputHour.value) && checkTime(inputMinute.value)) {
+        this.setState({correctInputHour: true});
+        this.setState({correctInputMinute: true});
+        if (!checkHours(inputHour.value)) {
+            this.setState({correctInputHour: false});
+        }
+        if (!checkMinutes(inputMinute.value)) {
+            this.setState({correctInputMinute: false});
+        }
+        if (checkHours(inputHour.value) && checkMinutes(inputMinute.value)) {
             let time = inputHour.value + ":" + inputMinute.value;
             let event = {
                 day: this.props.day,
                 time: time,
                 text: inputText.value
             }
-            postNewEvent(this.props.email, event)
-                .then(value => {
-                    if (value === false) {
-                        return <Error message="Event not added"/>
-                    }
-                });
             this.props.dispatch(addEvent(event));
-            this.setState({correctInputHour: true});
-            this.setState({correctInputMinute: true});
             inputHour.value = '';
             inputMinute.value = '';
             inputText.value = '';
-        } else if (!checkTime(inputHour.value)) {
-            this.setState({correctInputHour: false});
-        } else if (!checkTime(inputMinute.value)) {
-            this.setState({correctInputMinute: false});
         }
     }
 
@@ -64,7 +58,7 @@ export default class FormAddNewEvent extends Component {
                         <input
                             type="text"
                             placeholder="Enter minutes"
-                            className = {this.state.correctInputHour ? 'right' : 'right wrong'}
+                            className = {this.state.correctInputMinute ? 'right' : 'right wrong'}
                             ref={this.minutes}
                             required
                         />
@@ -85,9 +79,18 @@ export default class FormAddNewEvent extends Component {
 
 FormAddNewEvent = connect()(FormAddNewEvent);
 
-function checkTime(propsTime) {
+function checkHours(propsTime) {
+    const timeRule = /^[0-9]{1,2}$/;
+    return (
+        timeRule.test(propsTime)
+        && propsTime < 24
+    );
+}
+
+function checkMinutes(propsTime) {
     const timeRule = /^[0-9]{2}$/;
     return (
         timeRule.test(propsTime)
+        && propsTime <= 60
     );
 }
