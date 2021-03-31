@@ -1,7 +1,8 @@
-import {SET_EVENTS} from "./actions";
 import {combineReducers} from "redux";
 import {createSlice} from '@reduxjs/toolkit'
-//import socket from "./socket";
+import {postEditEvent, postNewEvent, postRemoveEvent} from "./httpMethods";
+import Error from "../app/Error";
+import React from "react";
 
 const eventsSlice = createSlice({
     name: 'filter',
@@ -9,6 +10,7 @@ const eventsSlice = createSlice({
         email: null,
         logger: false,
         edit: false,
+
         events: [{
             "day": "3/4/2021",
             "time": "18:00",
@@ -30,6 +32,9 @@ const eventsSlice = createSlice({
                     text: action.payload.text
                 }
             ]
+            postNewEvent(state.email, state.events).then(value => {
+                    if (value === false) {return <Error message="Event not added"/>}
+                });
         },
         forRemoveEvent: (state, action) => {
             let currentIndex = -1;
@@ -47,6 +52,9 @@ const eventsSlice = createSlice({
                     ...action.payload.allEvents.slice(currentIndex + 1)
                 ]
             }
+            postRemoveEvent(state.email, state.events).then(value => {
+                    if (value === false) {return <Error message={"Event not deleted"}/>}
+                })
         },
         forEditEvent: (state, action) => {
             action.payload.allEvents.map((cell, index) => {
@@ -60,6 +68,9 @@ const eventsSlice = createSlice({
                         ...action.payload.allEvents.slice(index + 1)
                     ]
                 }
+            })
+            postEditEvent(state.email, state.events).then(value => {
+                if (value === false) {return <Error message={"Event not deleted"}/>}
             })
         },
         forSetEdit: (state, action) => {
