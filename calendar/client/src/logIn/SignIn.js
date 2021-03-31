@@ -3,36 +3,43 @@ import {Link, Redirect} from "react-router-dom";
 import ReactDom from "react-dom";
 import {setEvents} from "../store/actions";
 import {connect} from 'react-redux'
+import moment from "moment";
+import Error from "../app/Error";
 
 let email;
 let password;
 
 export default class SignIn extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            incorrectEmail: false,
+            incorrectPassword: false
+        }
+    }
 
     onSubmit = (e) => {
-        postResponse().then(value => {
+        this.setState({incorrectEmail: false});
+        this.setState({incorrectPassword: false});
+        postResponse(email.value, password.value).then(value => {
             if (value.email && value.password) {
                 this.props.dispatch(setEvents({email: email.value, events: [...value.events]}))
             }
-            if (!value.email) {
-                ReactDom.render(
-                    <h1 className="incorrectEnteredData">User does not exist, please register</h1>,
-                    document.getElementById('incorrectEmail')
-                )
-            }
-            if (!value.password) {
-                ReactDom.render(
-                    <h1 className="incorrectEnteredData">Incorrect entered password</h1>,
-                    document.getElementById('incorrectPassword')
-                )
-            }
+            if (!value.email) {this.setState({incorrectEmail: true});}
+            if (!value.password) {this.setState({incorrectPassword: true});}
 
             if (value===false) {
-                Error("Error")
+                ReactDom.render(
+                    <Error message= {"Error with connection. Please reload the page" }/>,
+                    document.getElementById('root')
+                )
             }
         }, reason => {
-            console.log("wtf: ", reason)
-            Error(reason)
+            console.log(reason)
+            ReactDom.render(
+                <Error message= {reason}/>,
+                document.getElementById('root')
+            )
         })
 
         e.preventDefault();
@@ -53,23 +60,19 @@ export default class SignIn extends Component {
                         </div>
                         <hr/>
 
-                        <label className="email"><b>Email</b></label>
-                        <div id="incorrectEmail">
-                        </div>
+                        <label className="email"><b>Email</b>{this.state.incorrectEmail ? " *User does not exist, please register*" : ""}</label>
                         <input
+                            className = {this.state.incorrectEmail ? "wrong": ""}
                             type="text"
-                            placeholder="Enter Email"
-                            name="psw"
+                            placeholder= "Enter Email"
                             ref={this.inputEmail}
                             required
                         />
-                        <label className="email"><b>Password</b></label>
-                        <div id="incorrectPassword">
-                        </div>
+                        <label className="email"><b>Password</b>{this.state.incorrectPassword ? " *Incorrect entered password*" : ""}</label>
                         <input
+                            className = {this.state.incorrectPassword ? "wrong": ""}
                             type="password"
                             placeholder="Enter Password"
-                            name="psw-repeat"
                             ref={this.inputPassword}
                             required
                         />
@@ -90,7 +93,7 @@ export default class SignIn extends Component {
 
 SignIn = connect()(SignIn);
 
-async function postResponse() {
+async function postResponse(email, password) {
     try {
         let res = await fetch("/signIn", {
             method: 'POST',
@@ -99,7 +102,7 @@ async function postResponse() {
                 'Content-Type': 'application/json;charset=utf-8'
             },
             body: JSON.stringify(
-                {email: email.value, password: password.value}
+                {email, password}
             ),
         });
         return await res.json()
@@ -107,21 +110,8 @@ async function postResponse() {
     } catch (e) {
         console.log(e)
         ReactDom.render(
-            <h1 className="resultRegister">
-                Something is not work, please reload the page<br/>
-                Error: {e.message}
-            </h1>,
-            document.getElementById('result')
+            <Error message={e.message}/>,
+            document.getElementById('root')
         )
     }
-}
-
-function Error(massage) {
-    ReactDom.render(
-        <h1 className="resultRegister">
-            Something is not work, please reload the page<br/>
-            Error: {massage}
-        </h1>,
-        document.getElementById('result')
-    )
 }
