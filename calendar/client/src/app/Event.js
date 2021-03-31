@@ -1,10 +1,7 @@
 import React, { Component} from 'react'
 import {connect} from 'react-redux'
 import {removeEvent, editEvent, setEdit} from "../store/actions";
-import {postRemoveEvent, postEditEvent} from "../store/httpMethods"
-import Error from "./Error";
 import EditEvent from "./EditEvent";
-import {Link} from "react-router-dom";
 
 export default class Event extends Component {
 
@@ -18,12 +15,6 @@ export default class Event extends Component {
             allEvents: [...this.props.allEvents],
             currentEvent
         }))
-        postRemoveEvent(this.props.email, currentEvent)
-            .then(value => {
-                if (value === false) {
-                    return <Error message={"Event not deleted"}/>
-                }
-            })
     }
 
     onEdit = (newText) => {
@@ -42,15 +33,6 @@ export default class Event extends Component {
             editedEvent,
             currentEvent
         }))
-        postEditEvent(
-            this.props.email,
-            editedEvent,
-            currentEvent
-        ).then(value => {
-            if (value === false) {
-                return <Error message={"Event not deleted"}/>
-            }
-        })
     }
 
      onClick = () => {
