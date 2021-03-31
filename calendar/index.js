@@ -25,16 +25,6 @@ server.use(express.static(
 
 server.use(bodyParser.json());
 
-let usersBase = [];
-
-User.find({}, function(err, doc) {
-    if (err) return console.log(err)
-    usersBase = [...doc]
-    console.log(usersBase.map(value => {
-        return value.events
-    }))
-})
-
 server.get("/get", async(req, res) => {
     try {
         let usersBase = [];
@@ -126,8 +116,7 @@ server.post("/remove", async (req, res) => {
     try {
         let returnValue = true;
 
-        await User.findOneAndUpdate({email: req.body.email}, {events: req.body.events}, {new: true},
-            (err) => {
+        await User.findOneAndUpdate({email: req.body.email}, {events: req.body.events}, {new: true}, (err) => {
             if (err) returnValue = false;
         })
 
@@ -140,8 +129,7 @@ server.post("/remove", async (req, res) => {
 server.post("/edit", async (req, res) => {
     try {
         let returnValue = true;
-        await User.findOneAndUpdate({email: req.body.email}, {events: req.body.events}, {new: true},
-            (err) => {
+        await User.findOneAndUpdate({email: req.body.email}, {events: req.body.events}, {new: true}, (err) => {
             if (err) {returnValue = false}
         })
 
