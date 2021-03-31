@@ -12,36 +12,39 @@ mongoose.connect('mongodb://localhost/users', {useUnifiedTopology: true, useNewU
     .catch((e) => console.log(e))
 const server = express();
 server.use(express.urlencoded({ extended: false}))
-const httpServer = require('http').createServer(server)
-//const io = require('socket.io')(httpServer);
+const httpServer = require('http').createServer(server);
 
-const con = mongoose.connection;
-
-con.on('open', function (){
+mongoose.connection.on('open', function (){
     console.log('is cinnected...')
-})
-
-
-let users = [];
-let usersBase = [];
-
-User.find({}, function(err, doc) {
-    //mongoose.disconnect();
-    if (err) return console.log(err)
-    usersBase = [...doc]
-    console.log(usersBase)
-})
+});
+mongoose.set("useFindAndModify", false);
 
 server.use(express.static(
     resolve(__dirname, "client", "dist")
 ));
 
-server.use(bodyParser.json())
+server.use(bodyParser.json());
 
-//server.set('io', io)
+let usersBase = [];
+
+User.find({}, function(err, doc) {
+    if (err) return console.log(err)
+    usersBase = [...doc]
+    console.log(usersBase.map(value => {
+        return value.events
+    }))
+})
 
 server.get("/get", async(req, res) => {
     try {
+        let usersBase = [];
+
+        User.find({}, function(err, doc) {
+            if (err) return console.log(err)
+            usersBase = [...doc]
+            console.log(usersBase)
+        })
+
         res.send(usersBase);
     } catch (e) {
         console.log(e);
@@ -52,12 +55,12 @@ server.get("/get", async(req, res) => {
 server.post("/register", async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
-
         let email = false;
 
         await User.findOne({email: req.body.email}, (err, doc) => {
-            email = true;
-            res.status(201).jsonp(false)
+            if (doc) {
+                email = true;
+            }
         })
         if (!email) {
             const newUser = new User({
@@ -65,21 +68,13 @@ server.post("/register", async (req, res) => {
                 password: hashedPassword,
                 events: []
             })
-            User.create(newUser, (err, doc) => {
-                if (err) return console.log(err)
-                usersBase.push(doc)
-                fs.writeFile(resolve(__dirname, "users.json"),
-                    JSON.stringify(usersBase, null, 4),
-                    'utf8',
-                    (err) => {
-                        res.status(404).jsonp(err)
-                    }
-                );
+            await User.create(newUser, (err) => {
+                if (err) return email = true
             })
-            res.status(201).jsonp(usersBase)
         }
+        res.status(201).jsonp(email)
     } catch (e) {
-        res.status(404).jsonp(false)
+        res.status(404).jsonp(e)
     }
 })
 
@@ -93,9 +88,11 @@ server.post("/signIn", async (req, res) => {
         }
         let document = {};
         await User.findOne({email: req.body.email}, (err, doc) => {
-            check.email = true;
-            check.count = 1;
-            document = {password: doc.password, events: [...doc.events]}
+            if (doc) {
+                check.email = true;
+                check.count = 1;
+                document = {password: doc.password, events: [...doc.events]}
+            }
         })
         bcrypt.compare(req.body.password, document.password, (error, resp) => {
             if (resp) {
@@ -115,26 +112,11 @@ server.post("/signIn", async (req, res) => {
 
 server.post("/add", async (req, res) => {
     try {
-        let events = [];
-        let allUsers = [];
-        await User.findOne({email: req.body.email}, (err, doc) => {
-            events = [...doc.events]
+        let status = true;
+        await User.updateOne({email: req.body.email}, {events: req.body.events}, (err) => {
+            if (err) status = false
         })
-        events.push(req.body.event)
-
-        await User.updateOne({email: req.body.email}, {events: events}, (err, result) => {
-            User.find({}, (err, doc) => {
-                allUsers = [...doc]
-                fs.writeFile(resolve(__dirname, "users.json"),
-                    JSON.stringify(allUsers, null, 4),
-                    'utf8',
-                    (err) => {
-                        res.status(404).jsonp(err)
-                    }
-                );
-            })
-        })
-        res.status(201).jsonp(true)
+        res.status(201).jsonp(status)
     } catch (e) {
         res.status(404).jsonp(false)
     }
@@ -142,37 +124,14 @@ server.post("/add", async (req, res) => {
 
 server.post("/remove", async (req, res) => {
     try {
-        let events = [];
-        let allUsers = [];
-        await User.findOne({email: req.body.email}, (err, doc) => {
-            events = [...doc.events]
-        })
-        events.forEach((value, index) => {
-            if (value.day === req.body.event.day
-                && value.time === req.body.event.time
-                && value.text === req.body.event.text
-            ) {
-                events = [
-                    events.slice(0, index),
-                    events.slice(index + 1)
-                ]
-            }
+        let returnValue = true;
+
+        await User.findOneAndUpdate({email: req.body.email}, {events: req.body.events}, {new: true},
+            (err) => {
+            if (err) returnValue = false;
         })
 
-        await User.updateOne({email: req.body.email}, {events: events}, (err, result) => {
-            User.find({}, (err, doc) => {
-                allUsers = [...doc]
-                fs.writeFile(resolve(__dirname, "users.json"),
-                    JSON.stringify(allUsers, null, 4),
-                    'utf8',
-                    (err) => {
-                        res.status(404).jsonp(err)
-                    }
-                );
-            })
-        })
-
-        res.status(201).jsonp(true)
+        res.status(201).jsonp(returnValue)
     } catch (e) {
         res.status(404).jsonp(false)
     }
@@ -180,42 +139,17 @@ server.post("/remove", async (req, res) => {
 
 server.post("/edit", async (req, res) => {
     try {
-        let events = [];
-        await User.findOne({email: req.body.email}, (err, doc) => {
-            events = [...doc.events]
-        })
-        events.forEach((value, index) => {
-            if (value.day === req.body.editedEvent.day
-                && value.time === req.body.editedEvent.time
-                && value.text === req.body.editedEvent.text
-            ) {
-
-                events = [
-                    ...events.slice(0, index),
-                    req.body.currentEvent,
-                    ...events.slice(index + 1)
-                ]
-            }
+        let returnValue = true;
+        await User.findOneAndUpdate({email: req.body.email}, {events: req.body.events}, {new: true},
+            (err) => {
+            if (err) {returnValue = false}
         })
 
-        let allUsers = [];
-
-        await User.updateOne({email: req.body.email}, {events: events}, (err, result) => {
-            User.find({}, (err, doc) => {
-                allUsers = [...doc]
-                fs.writeFile(resolve(__dirname, "users.json"),
-                    JSON.stringify(allUsers, null, 4),
-                    'utf8',
-                    (err) => {}
-                );
-            })
-        })
-
-        res.status(201).jsonp(true)
+        res.status(201).jsonp(returnValue)
     } catch (e) {
         res.status(404).jsonp(false)
     }
-})
+});
 
 async function start() {
     try{
