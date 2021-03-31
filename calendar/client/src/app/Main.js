@@ -126,6 +126,7 @@ export default class Main extends Component {
                     <h1 className="addNew">+</h1>
                     <FormAddNewEvent
                         email={this.props.email}
+                        events={this.props.events}
                         day={data}
                     />
                     {this.state.events.map(item => {
