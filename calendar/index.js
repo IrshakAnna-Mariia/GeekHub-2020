@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const express = require('express')
 const {resolve} = require('path')
-const fs = require("fs")
 const bodyParser = require("body-parser")
 const bcrypt = require('bcrypt');
 const PORT = process.env.PORT || 8000;
@@ -64,7 +63,7 @@ server.post("/register", async (req, res) => {
         }
         res.status(201).jsonp(email)
     } catch (e) {
-        res.status(404).jsonp(e)
+        res.status(404).jsonp({error: e.message})
     }
 })
 
@@ -84,7 +83,7 @@ server.post("/signIn", async (req, res) => {
                 document = {password: doc.password, events: [...doc.events]}
             }
         })
-        bcrypt.compare(req.body.password, document.password, (error, resp) => {
+        await bcrypt.compare(req.body.password, document.password, (error, resp) => {
             if (resp) {
                 check.events = [...document.events];
                 check.password = true
@@ -116,7 +115,8 @@ server.post("/remove", async (req, res) => {
     try {
         let returnValue = true;
 
-        await User.findOneAndUpdate({email: req.body.email}, {events: req.body.events}, {new: true}, (err) => {
+        await User.findOneAndUpdate({email: req.body.email}, {events: req.body.events}, {new: true},
+            (err) => {
             if (err) returnValue = false;
         })
 
@@ -129,7 +129,8 @@ server.post("/remove", async (req, res) => {
 server.post("/edit", async (req, res) => {
     try {
         let returnValue = true;
-        await User.findOneAndUpdate({email: req.body.email}, {events: req.body.events}, {new: true}, (err) => {
+        await User.findOneAndUpdate({email: req.body.email}, {events: req.body.events}, {new: true},
+            (err) => {
             if (err) {returnValue = false}
         })
 
