@@ -3,6 +3,7 @@ import SignIn from "./logIn/SignIn";
 import Register from "./logIn/Register";
 import Main from "./app/Main";
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import Error from "./app/Error";
 
 export default class App extends Component {
     render() {
@@ -11,19 +12,17 @@ export default class App extends Component {
                 <Router>
                     <Switch>
                         <Route exact path="/login">
-                            <SignIn logger={this.props.logger}/>
+                            <SignIn/>
                         </Route>
                         <Route exact path="/register">
                             <Register/>
                         </Route>
 
                         <Route exact path="/">
-                            <Main
-                                email={this.props.email}
-                                events={this.props.events}
-                                logger={this.props.logger}
-                                edit={this.props.edit}
-                            />
+                            <Main/>
+                        </Route>
+                        <Route exact path="/error">
+                            <Error/>
                         </Route>
                     </Switch>
                 </Router>
