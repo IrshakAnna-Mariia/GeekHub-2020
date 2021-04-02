@@ -1,14 +1,15 @@
 import {combineReducers} from "redux";
 import {createSlice} from '@reduxjs/toolkit'
 import {postEditEvent, postNewEvent, postRemoveEvent} from "./httpMethods";
-import Error from "../app/Error";
 import React from "react";
 
-const eventsSlice = createSlice({
-    name: 'filter',
+export const eventsSlice = createSlice({
+    name: 'event',
     initialState: {
         email: null,
         logger: false,
+        error: false,
+        messageError: null,
         edit: false,
 
         events: [{
@@ -33,7 +34,10 @@ const eventsSlice = createSlice({
                 }
             ]
             postNewEvent(state.email, state.events).then(value => {
-                    if (value === false) {return <Error message="Event not added"/>}
+                    if (value === false) {
+                        state.error = true;
+                        state.messageError = "Event not added"
+                    }
                 });
         },
         forRemoveEvent: (state, action) => {
@@ -53,7 +57,10 @@ const eventsSlice = createSlice({
                 ]
             }
             postRemoveEvent(state.email, state.events).then(value => {
-                    if (value === false) {return <Error message={"Event not deleted"}/>}
+                    if (value === false) {
+                        state.error = true;
+                        state.messageError = "Event not deleted"
+                    }
                 })
         },
         forEditEvent: (state, action) => {
@@ -70,11 +77,18 @@ const eventsSlice = createSlice({
                 }
             })
             postEditEvent(state.email, state.events).then(value => {
-                if (value === false) {return <Error message={"Event not deleted"}/>}
+                if (value === false) {
+                    state.error = true;
+                    state.messageError = "Event not deleted"
+                }
             })
         },
         forSetEdit: (state, action) => {
             state.edit = action.payload
+        },
+        forSetError: (state, action) => {
+            state.messageError = action.payload;
+            state.error = true;
         }
     }
 });
@@ -89,4 +103,4 @@ const EventsApp = combineReducers({
 });
 
 export  default EventsApp;
-export const {setStartEvents, addNewEvent, forRemoveEvent, forEditEvent} = eventsSlice.actions
+export const {setStartEvents, addNewEvent, forRemoveEvent, forEditEvent, forSetEdit, forSetError} = eventsSlice.actions
