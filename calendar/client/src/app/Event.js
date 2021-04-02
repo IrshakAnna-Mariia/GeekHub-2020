@@ -1,7 +1,7 @@
-import React, { Component} from 'react'
-import {connect} from 'react-redux'
+import React, { Component} from 'react';
 import {removeEvent, editEvent, setEdit} from "../store/actions";
 import EditEvent from "./EditEvent";
+import {store} from "../index";
 
 export default class Event extends Component {
 
@@ -11,7 +11,7 @@ export default class Event extends Component {
             time: this.props.time,
             text: this.props.text
         }
-        this.props.dispatch(removeEvent({
+        store.dispatch(removeEvent({
             allEvents: [...this.props.allEvents],
             currentEvent
         }))
@@ -28,7 +28,7 @@ export default class Event extends Component {
             time: this.props.time,
             text: newText
         }
-        this.props.dispatch(editEvent({
+        store.dispatch(editEvent({
             allEvents: [...this.props.allEvents],
             editedEvent,
             currentEvent
@@ -36,10 +36,11 @@ export default class Event extends Component {
     }
 
      onClick = () => {
-        this.props.dispatch(setEdit(true))
+        store.dispatch(setEdit(true))
     }
 
     render() {
+        const {edit, text} = this.props
         return (
             <div>
                 <h1 className="time">
@@ -51,10 +52,8 @@ export default class Event extends Component {
                     <i onClick={this.onClick}>edit</i>
                     {'):'}
                 </h1>
-                {this.props.edit ? <EditEvent text={this.props.text} onEdit={this.onEdit}/> : <p className="textEvent">{this.props.text}</p>}
+                {edit ? <EditEvent text={text} onEdit={this.onEdit}/> : <p className="textEvent">{text}</p>}
             </div>
         )
     }
 }
-
-Event = connect()(Event)
