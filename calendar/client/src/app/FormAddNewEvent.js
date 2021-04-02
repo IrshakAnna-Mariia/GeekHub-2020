@@ -1,96 +1,81 @@
-import React, { Component} from 'react'
-import {connect} from 'react-redux'
+import React, { Component} from 'react';
 import {addEvent} from "../store/actions";
-
-let inputHour;
-let inputMinute;
-let inputText;
+import NewEventInput from "./NewEventInput";
+import {store} from "../index";
 
 export default class FormAddNewEvent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            correctInputHour: true,
-            correctInputMinute: true
+            hour: "",
+            minute: "",
+            text: "",
+
+            hourValid: true,
+            minuteValid: true
         }
     }
 
-    hours = (node) => inputHour = node
-    minutes = (node) => inputMinute = node
-    text = (node) => inputText = node
+    onSubmit = (e) => {
+        e.preventDefault();
+        const {hour, minute, text} = this.state;
 
-    onClick = () => {
-        this.setState({correctInputHour: true});
-        this.setState({correctInputMinute: true});
-        if (!checkHours(inputHour.value)) {
-            this.setState({correctInputHour: false});
+        const hourRule = /^[0-9]{1,2}$/;
+        let hourValid = (hourRule.test(hour) && hour < 24);
+        const minuteRule = /^[0-9]{2}$/;
+        let minuteValid = (minuteRule.test(minute) && minute <= 60)
+
+        if (hourValid && minuteValid) {
+            let time = hour + ":" + minute;
+            let event = {day: this.props.day, time, text}
+            store.dispatch(addEvent(event));
         }
-        if (!checkMinutes(inputMinute.value)) {
-            this.setState({correctInputMinute: false});
-        }
-        if (checkHours(inputHour.value) && checkMinutes(inputMinute.value)) {
-            let time = inputHour.value + ":" + inputMinute.value;
-            let event = {
-                day: this.props.day,
-                time: time,
-                text: inputText.value
-            }
-            this.props.dispatch(addEvent(event));
-            inputHour.value = '';
-            inputMinute.value = '';
-            inputText.value = '';
-        }
+
+        this.setState({hour: "", minute: "", text: "", hourValid, minuteValid})
+    }
+
+    onChange = (field, value) => {
+        this.setState({[field]: value})
     }
 
     render() {
+        const {hour, minute, text, hourValid, minuteValid} = this.state;
+
         return (
             <div id="dif">
-                <div className="formAddNew">
+                <form className="formAddNew" onSubmit={this.onSubmit}>
                     <div className="setTime">
-                        <input
-                            type="text"
+                        <NewEventInput
+                            name="hour"
                             placeholder="Enter hours"
-                            className = {this.state.correctInputHour ? 'left' : 'left wrong'}
-                            ref={this.hours}
+                            value={hour}
+                            valid={hourValid}
+                            align="left"
+                            onChange={this.onChange}
                             required
                         />
                         <b>:</b>
-                        <input
-                            type="text"
+                        <NewEventInput
+                            name="minute"
                             placeholder="Enter minutes"
-                            className = {this.state.correctInputMinute ? 'right' : 'right wrong'}
-                            ref={this.minutes}
+                            value={minute}
+                            valid={minuteValid}
+                            align="right"
+                            onChange={this.onChange}
                             required
                         />
                     </div>
-                    <input
-                        type="text"
+                    <NewEventInput
+                        name="text"
                         placeholder="Enter text"
-                        ref={this.text}
+                        value={text}
+                        onChange={this.onChange}
                         required
                     />
-                    <button type="button" onClick={this.onClick}>Add</button>
+                    <button type="submit">Add</button>
                     <hr/>
-                </div>
+                </form>
             </div>
         )
     }
-}
-
-FormAddNewEvent = connect()(FormAddNewEvent);
-
-function checkHours(propsTime) {
-    const timeRule = /^[0-9]{1,2}$/;
-    return (
-        timeRule.test(propsTime)
-        && propsTime < 24
-    );
-}
-
-function checkMinutes(propsTime) {
-    const timeRule = /^[0-9]{2}$/;
-    return (
-        timeRule.test(propsTime)
-        && propsTime <= 60
-    );
 }
