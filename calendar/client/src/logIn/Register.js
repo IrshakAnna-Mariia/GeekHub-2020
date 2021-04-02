@@ -1,56 +1,86 @@
 import React, { Component} from 'react'
-import ReactDom from 'react-dom'
-import {connect} from 'react-redux'
-import {Link} from "react-router-dom";
-
-let email;
-let password;
-let repeatPassword;
+import {postResponseRegister} from '../store/httpMethods'
+import {Link, Redirect} from "react-router-dom";
+import {connect} from "react-redux";
+import {forSetError} from "../store/reducers";
+import Input from "./Input";
 
 export default class Register extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            successReg: false,
-            isEmailAlreadyReg: false,
-            incorrectEmail: false,
-            incorrectPassword: false,
-            incorrectRepeatPassword: false
+            email: "",
+            password: "",
+            repeatPassword: "",
+
+            successRegValid: false,
+            isAlreadyRegValid: false,
+            emailValid: true,
+            passwordValid: true,
+            repeatPasswordValid: true
         }
+    }
+
+    componentDidUpdate(prev) {
+        const {error} = this.props
+        if (error !== prev.error) {this.setState({error: this.props.error})}
     }
 
     onSubmit = (e) => {
-        this.setState({successReg: false});
-        this.setState({isEmailAlreadyReg: false});
-        this.setState({incorrectEmail: false});
-        this.setState({incorrectPassword: false});
-        this.setState({incorrectRepeatPassword: false});
-
-        if (checkEmail(email.value)
-            && checkPassword(password.value)
-                && (repeatPassword.value===password.value)) {
-            postResponse().then(value => {
-                if(value) {
-                    this.setState({isEmailAlreadyReg: true});
-                } else {this.setState({successReg: true});}
-            });
-            email.value = '';
-            password.value = '';
-            repeatPassword.value = '';
-        } else {
-            if (!checkEmail(email.value)) {this.setState({incorrectEmail: true});}
-            if (!checkPassword(password.value)) {this.setState({incorrectPassword: true});}
-            if (!(repeatPassword.value === password.value)) {this.setState({incorrectRepeatPassword: true});}
-        }
-
         e.preventDefault()
+
+        const {email, password, repeatPassword} = this.state;
+
+        const emailParts = email.split('@');
+        const username = emailParts[0];
+        const domain = emailParts[1];
+        const usernameRule = /^[a-zA-Z0-9\-.]+$/;
+        const emailRule1 = /^[^.].+[^.]$/;
+        const emailRule2 = /^.*[^.]@[^.].*$/;
+
+        let emailValid = (
+            emailParts.length === 2 &&
+            usernameRule.test(username) &&
+            usernameRule.test(domain) &&
+            domain.includes('.') &&
+            emailRule1.test(email) &&
+            emailRule2.test(email)
+        );
+
+        const passwordRule1 = /^[a-zA-Z0-9]{8,}$/;
+        const passwordRule2 = /[a-z]/;
+        const passwordRule3 = /[A-Z]/;
+        const passwordRule4 = /[0-9]/;
+
+        let passwordValid = (
+            passwordRule1.test(password) &&
+            passwordRule2.test(password) &&
+            passwordRule3.test(password) &&
+            passwordRule4.test(password)
+        );
+        let repeatPasswordValid = password === repeatPassword;
+        if (emailValid && passwordValid && repeatPasswordValid) {
+            postResponseRegister(email, password).then(value => {
+                if(value) {
+                    if(value.error) return this.props.forSetError(value.error);
+                    this.setState({isAlreadyRegValid: true})
+                } else {this.setState({successRegValid: true})}
+            });
+        }
+        this.setState({
+            email: "", password: "", repeatPassword: "",
+            emailValid, passwordValid, repeatPasswordValid,
+        });
     }
 
-    inputEmail = (node) => email = node
-    inputPassword = (node) => password = node
-    inputRepeatPassword = (node) => repeatPassword = node
+    onChange = (field, value) => {
+        this.setState({[field]: value})
+    }
 
     render() {
+        if (this.props.error) {return <Redirect to="/error" />}
+        const {email, password, repeatPassword, successRegValid, isAlreadyRegValid, emailValid, passwordValid, repeatPasswordValid} = this.state;
+
         return (
             <div className="containerReg">
                 <form onSubmit={this.onSubmit}>
@@ -58,56 +88,44 @@ export default class Register extends Component {
                         <h1 className="register">Register</h1>
                         <p className="register">Please fill in this form to create an account</p>
                         <div id="result">
-                            {this.state.successReg ? <h1 className="resultRegister">
+                            {successRegValid ? <h1 className="resultRegister">
                                 Registration was successful. Go to the SignIn form
-                            </h1> : this.state.isEmailAlreadyReg ? <h1 className="resultRegister">
+                            </h1> : isAlreadyRegValid ? <h1 className="resultRegister">
                                 User already exists. Go to the SignIn form
                             </h1> : null}
                         </div>
                         <hr/>
 
-                        <label className="email">
-                            <b>Email</b>
-                            {this.state.incorrectEmail ? <h1 className="incorrectEnteredData">Incorrect entered email</h1> : ""}
-                        </label>
-                        <div id="incorrectEmail">
-                        </div>
-                        <input
-                            className = {this.state.incorrectEmail ? "wrong": ""}
+                        <Input
+                            label="Email"
                             type="text"
+                            name="email"
+                            value={email}
+                            valid={emailValid}
+                            invalidText=" *Incorrect entered email. Please make sure that entered password have at least 8 characters, including numbers, lowercase, and uppercase letters*"
                             placeholder="Enter Email"
-                            ref={this.inputEmail}
-                            required
+                            onChange={this.onChange}
                         />
-                        <label className="email">
-                            <b>Password</b>
-                            {this.state.incorrectPassword ? <h1 className="incorrectEnteredData">Incorrect entered password. <br/>
-                                Please make sure that entered password have at least 8 characters,
-                                including numbers, lowercase, and uppercase letters</h1> : null}
-                        </label>
-                        <div id="incorrectPassword">
-                        </div>
-                        <input
-                            className = {this.state.incorrectPassword ? "wrong": ""}
+                        <Input
+                            label="Password"
                             type="password"
+                            name="password"
+                            value={password}
+                            valid={passwordValid}
+                            invalidText=" *Incorrect entered password.Please make sure that entered password have at least 8 characters, including numbers, lowercase, and uppercase letters*"
                             placeholder="Enter Password"
-                            id="password"
-                            ref={this.inputPassword}
-                            required
+                            onChange={this.onChange}
                         />
-                        <label className="email">
-                            <b>Repeat password</b>
-                            {this.state.incorrectRepeatPassword ? <h1 className="incorrectEnteredData">Incorrect entered password. <br/>
-                                Please make the entered passwords are the same</h1> : ""}
-                        </label>
-                        <div id="incorrectRepeatPassword">
-                        </div>
-                        <input
-                            className = {this.state.incorrectRepeatPassword ? "wrong": ""}
+                        <Input
+                            label="Email"
                             type="password"
+                            name="repeatPassword"
+                            value={repeatPassword}
+                            valid={repeatPasswordValid}
+                            invalidText=" *Incorrect entered password.Please make the entered passwords are the same*"
                             placeholder="Enter Password Again"
-                            ref={this.inputRepeatPassword}
-                            required/>
+                            onChange={this.onChange}
+                        />
 
                         <hr/>
                     </div>
@@ -125,60 +143,7 @@ export default class Register extends Component {
     }
 }
 
-//SignIn = connect()(SignIn);
-
-function checkEmail(propsEmail) {
-    const emailParts = propsEmail.split('@');
-    const username = emailParts[0];
-    const domain = emailParts[1];
-    const usernameRule = /^[a-zA-Z0-9\-.]+$/;
-    const emailRule1 = /^[^.].+[^.]$/;
-    const emailRule2 = /^.*[^.]@[^.].*$/;
-
-    return (
-        emailParts.length === 2 &&
-        usernameRule.test(username) &&
-        usernameRule.test(domain) &&
-        domain.includes('.') &&
-        emailRule1.test(propsEmail) &&
-        emailRule2.test(propsEmail)
-    );
-}
-
-function checkPassword(propsPassword) {
-    const passwordRule1 = /^[a-zA-Z0-9]{8,}$/;
-    const passwordRule2 = /[a-z]/;
-    const passwordRule3 = /[A-Z]/;
-    const passwordRule4 = /[0-9]/;
-
-    return (
-        passwordRule1.test(propsPassword) &&
-        passwordRule2.test(propsPassword) &&
-        passwordRule3.test(propsPassword) &&
-        passwordRule4.test(propsPassword)
-    );
-}
-
-async function postResponse() {
-    try {
-        let res = await fetch("/register", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: JSON.stringify(
-                {email: email.value, password: password.value}
-            ),
-        });
-        return await res.json()
-    } catch (e) {
-        console.log(e)
-        ReactDom.render(
-            <h1 className="resultRegister">
-                Something is not work, please reload the page<br/>
-                Error: {e.message}
-            </h1>,
-            document.getElementById('result')
-        )
-    }
-}
+Register = connect(
+    (state) => {return {error: state.rootReducers.toolkit.error}},
+    {forSetError}
+)(Register);
