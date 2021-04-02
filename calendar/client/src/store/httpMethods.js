@@ -1,6 +1,6 @@
 import React from 'react'
-import ReactDom from 'react-dom'
-import Error from "../app/Error";
+import {store} from "../index"
+import {setError} from "./actions";
 
 export async function postNewEvent(email, events) {
     try {
@@ -17,11 +17,7 @@ export async function postNewEvent(email, events) {
         return await res.json()
 
     } catch (e) {
-        console.log(e)
-        ReactDom.render(
-            <Error message={e.message}/>,
-            document.getElementById('root')
-        )
+        store.dispatch(setError(e.message))
     }
 }
 
@@ -40,11 +36,7 @@ export async function postRemoveEvent(email, events) {
         return await res.json()
 
     } catch (e) {
-        console.log(e)
-        ReactDom.render(
-            <Error message={e.message}/>,
-            document.getElementById('root')
-        )
+        store.dispatch(setError(e.message))
     }
 }
 
@@ -63,11 +55,43 @@ export async function postEditEvent(email, events) {
         return await res.json()
 
     } catch (e) {
-        console.log(e)
-        ReactDom.render(
-            <Error message={e.message}/>,
-            document.getElementById('root')
-        )
+        store.dispatch(setError(e.message))
+    }
+}
+
+export async function postResponseSignIn(email, password) {
+    try {
+        let res = await fetch("/signIn", {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(
+                {email, password}
+            ),
+        });
+        return await res.json()
+
+    } catch (e) {
+        store.dispatch(setError(e.message))
+    }
+}
+
+export async function postResponseRegister(email, password) {
+    try {
+        let res = await fetch("/register", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(
+                {email, password}
+            ),
+        });
+        return await res.json()
+    } catch (e) {
+        store.dispatch(setError(e.message))
     }
 }
 
