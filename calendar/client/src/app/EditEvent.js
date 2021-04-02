@@ -1,20 +1,15 @@
 import React, { Component} from 'react'
-import {connect} from 'react-redux'
-import {removeEvent, editEvent, setEdit} from "../store/actions";
-import {postRemoveEvent} from "../store/httpMethods"
-
-let inputText;
+import {setEdit} from "../store/actions";
+import {store} from '../index'
 
 export default class EditEvent extends Component {
 
     onEdit = (e) => {
         if (e.key === 'Enter') {
-            this.props.onEdit(inputText.value);
-            this.props.dispatch(setEdit(false));
+            this.props.onEdit(e.currentTarget.value);
+            store.dispatch(setEdit(false));
         }
     }
-
-    text = (node) => inputText = node;
 
     render() {
         return (
@@ -31,5 +26,3 @@ export default class EditEvent extends Component {
         )
     }
 }
-
-EditEvent = connect()(EditEvent)
