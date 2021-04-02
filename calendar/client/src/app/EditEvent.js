@@ -18,7 +18,6 @@ export default class EditEvent extends Component {
                     type="text"
                     placeholder="Enter text"
                     defaultValue={this.props.text}
-                    ref={this.text}
                     onKeyPress={this.onEdit}
                     required
                 />
