@@ -1,117 +1,112 @@
 import React, {Component} from 'react'
 import {Link, Redirect} from "react-router-dom";
-import ReactDom from "react-dom";
-import {setEvents} from "../store/actions";
 import {connect} from 'react-redux'
-import moment from "moment";
-import Error from "../app/Error";
-
-let email;
-let password;
+import {postResponseSignIn} from "../store/httpMethods";
+import Input from "./Input";
+import {forSetError, setStartEvents} from "../store/reducers"
 
 export default class SignIn extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            incorrectEmail: false,
-            incorrectPassword: false
+            logger: this.props.logger,
+            error: this.props.error,
+
+            email: "",
+            password: "",
+
+            emailValid: true,
+            passwordValid: true
+        }
+    }
+
+    componentDidUpdate(prev) {
+        const {logger, error} = this.props
+        if (logger !== prev.logger || error !== prev.error) {
+            this.setState({logger: this.props.logger, error: this.props.error})
         }
     }
 
     onSubmit = (e) => {
-        this.setState({incorrectEmail: false});
-        this.setState({incorrectPassword: false});
-        postResponse(email.value, password.value).then(value => {
-            if (value.email && value.password) {
-                this.props.dispatch(setEvents({email: email.value, events: [...value.events]}))
-            }
-            if (!value.email) {this.setState({incorrectEmail: true});}
-            if (!value.password) {this.setState({incorrectPassword: true});}
-
-            if (value===false) {
-                ReactDom.render(
-                    <Error message= {"Error with connection. Please reload the page" }/>,
-                    document.getElementById('root')
-                )
-            }
-        }, reason => {
-            console.log(reason)
-            ReactDom.render(
-                <Error message= {reason}/>,
-                document.getElementById('root')
-            )
-        })
-
         e.preventDefault();
+
+        const {email, password} = this.state;
+        postResponseSignIn(email, password).then(value => {
+            if (value===false) {return this.props.forSetError("Error with connection. Please reload the page");}
+            if (value.email && value.password) {
+                this.props.setStartEvents({email: email, events: [...value.events]})
+            }
+            if (!value.email) {this.setState({emailValid: false});}
+            if (!value.password) {this.setState({passwordValid: false});}
+
+       }, reason => {this.props.forSetError(reason);})
     }
 
-    inputEmail = (node) => email = node
-    inputPassword = (node) => password = node
+    onChange = (field, value) => {
+        this.setState({[field]: value})
+    }
 
     render() {
-        if (this.props.logger === true) {return <Redirect to="/" />}
-        else return (
-            <div className="containerReg">
-                <form onSubmit={this.onSubmit}>
-                    <div >
-                        <h1 className="signIn">Sign In</h1>
-                        <p className="signIn">Please fill in this form to sign in an account</p>
-                        <div id="result">
+        if (this.props.error) {return <Redirect to="/error" />}
+        if (this.props.logger) {return <Redirect to="/" />}
+        else {
+            const {email, password, emailValid, passwordValid} = this.state;
+            return (
+                <div className="containerReg">
+                    <form onSubmit={this.onSubmit}>
+                        <div >
+                            <h1 className="signIn">Sign In</h1>
+                            <p className="signIn">Please fill in this form to sign in an account</p>
+                            <div id="result">
+                            </div>
+                            <hr/>
+
+                            <Input
+                                label="Email"
+                                type="text"
+                                name="email"
+                                value={email}
+                                valid={emailValid}
+                                invalidText=" *User does not exist, please register*"
+                                placeholder="Enter Email"
+                                onChange={this.onChange}
+                            />
+                            <Input
+                                label="Password"
+                                type="password"
+                                name="password"
+                                value={password}
+                                valid={passwordValid}
+                                invalidText=" *Incorrect entered password*"
+                                placeholder="Enter Password"
+                                onChange={this.onChange}
+                            />
+
+                            <hr/>
                         </div>
-                        <hr/>
 
-                        <label className="email"><b>Email</b>{this.state.incorrectEmail ? " *User does not exist, please register*" : ""}</label>
-                        <input
-                            className = {this.state.incorrectEmail ? "wrong": ""}
-                            type="text"
-                            placeholder= "Enter Email"
-                            ref={this.inputEmail}
-                            required
-                        />
-                        <label className="email"><b>Password</b>{this.state.incorrectPassword ? " *Incorrect entered password*" : ""}</label>
-                        <input
-                            className = {this.state.incorrectPassword ? "wrong": ""}
-                            type="password"
-                            placeholder="Enter Password"
-                            ref={this.inputPassword}
-                            required
-                        />
-                        <hr/>
-                    </div>
+                        <button type="submit" className="loginbtn">Sign in</button>
 
-                    <button type="submit" className="loginbtn">Sign in</button>
+                        <Link to='/register'>
+                            <button type="button" className="registerbth">Register</button>
+                        </Link>
 
-                    <Link to='/register'>
-                        <button type="button" className="registerbth">Register</button>
-                    </Link>
-
-                </form>
-            </div>
-        )
+                    </form>
+                </div>
+            )
+        }
     }
 }
 
-SignIn = connect()(SignIn);
-
-async function postResponse(email, password) {
-    try {
-        let res = await fetch("/signIn", {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: JSON.stringify(
-                {email, password}
-            ),
-        });
-        return await res.json()
-
-    } catch (e) {
-        console.log(e)
-        ReactDom.render(
-            <Error message={e.message}/>,
-            document.getElementById('root')
-        )
+SignIn = connect(
+    (state) => {
+        return {
+            logger: state.rootReducers.toolkit.logger,
+            error: state.rootReducers.toolkit.error
+        }
+    },
+    {
+        setStartEvents,
+        forSetError
     }
-}
+)(SignIn);
